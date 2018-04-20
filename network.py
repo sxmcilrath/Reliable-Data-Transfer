@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+import os
 import random
 import binascii
 import threading
@@ -20,7 +21,9 @@ def _hexdump(data):
     print('%08x' % (len(data),), file=sys.stderr)
 
 class Network:
-    def __init__(self, loss=0.0, debug=False):
+    def __init__(self, loss=0.0, debug=None):
+        if debug is None:
+            debug = 'NET_DEBUG' in os.environ
         if not hasattr(loss, '__next__'):
             loss = _losstrials(loss)
         self.hosts = {}
@@ -243,8 +246,8 @@ class StreamSocket(Socket):
         """
         Waits for and accepts an incoming connection
 
-        Returns a pair (socket, addr) giving the address of the client and a
-        socket that may be used to communicate with it.
+        Returns a pair (socket, (addr, port)) giving the address of the client
+        and a socket that may be used to communicate with it.
 
         If this is called on a socket which is not listening, the method should
         raise StreamSocket.NotListening.
