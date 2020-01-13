@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+import sys
+import os.path
+sys.path.insert(0, os.path.dirname(os.path.abspath(sys.argv[0])))
+
 import threading
 import unittest
 import random
