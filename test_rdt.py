@@ -304,5 +304,8 @@ class H_Lose10_1x1(BaseNetworkTest):
     def test_00_connectall(self):
         self.makeconns({x: (x, x) for x in range(100)})
 
+class I_Lose10_1x1(B_Lossless_1x1):
+    LOSS = 0.10
+
 if __name__ == '__main__':
     unittest.main()
