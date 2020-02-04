@@ -210,8 +210,8 @@ class B_Lossless_1x1(BaseNetworkTest):
     def test_05_stress(self):
         """A lot of data can be sent and received"""
         self.makeconns({'c': (0, 1)})
-        # Send 8 MB in random sizes of up to 1400 B
-        MIN, MAX, TOTAL = 1, 1400, int(8e6)
+        # Send 4 MB in random sizes of up to 1400 B
+        MIN, MAX, TOTAL = 1, 1400, 2 ** 22
         data = b'0123456789' * (MAX // 5)
         with ExThread(target=self.client_stress, args=(MIN, MAX, TOTAL, data)) as cthr:
             count = 0
@@ -295,8 +295,8 @@ class G_Lossless_2x1_SameHost(F_Lossless_2x1):
     CLIENTS = [('8.8.4.4', None), ('8.8.4.4', None)]
     LISTEN = [('8.8.4.4', 20063)]
 
-class H_Lose10_1x1(BaseNetworkTest):
-    LOSS = 0.10
+class H_Lose5_1x1(BaseNetworkTest):
+    LOSS = 0.05
     CLIENTS = [('192.168.40.{}'.format(x), None) for x in range(100)]
     LISTEN = [('192.168.50.{}'.format(x), 36000 + x) for x in range(100)]
     CONNS = {x: (x, None) for x in range(100)}
@@ -304,8 +304,18 @@ class H_Lose10_1x1(BaseNetworkTest):
     def test_00_connectall(self):
         self.makeconns({x: (x, x) for x in range(100)})
 
-class I_Lose10_1x1(B_Lossless_1x1):
-    LOSS = 0.10
+class I_Lose5_1x1(B_Lossless_1x1):
+    LOSS = 0.05
+class J_Lose5_SameHost(C_Lossless_SameHost):
+    LOSS = 0.05
+class K_Lose5_1x2(D_Lossless_1x2):
+    LOSS = 0.05
+class L_Lose5_1x2_SameHost(E_Lossless_1x2_SameHost):
+    LOSS = 0.05
+class M_Lose5_2x1(F_Lossless_2x1):
+    LOSS = 0.05
+class N_Lose5_2x1_SameHost(G_Lossless_2x1_SameHost):
+    LOSS = 0.05
 
 if __name__ == '__main__':
     unittest.main()
