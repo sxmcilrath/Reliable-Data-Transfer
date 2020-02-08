@@ -8,6 +8,7 @@ import threading
 import unittest
 import random
 import itertools
+import base64
 from network import *
 from rdt import *
 from exthread import *
@@ -202,6 +203,30 @@ class A1_Lossless_1x1(BaseNetworkTest):
             self.s['c'].send(b'test-twoway2')
             self.assertEqual(self.c['c'].recv(), b'test-twoway2')
 
+    def test_05_binary(self):
+        data = base64.b64decode(
+                b'R0lGODlhFAAUAPZqAP/////5nf/4m//3m//2mv/0mP73m/72mv71mf70mP' +
+                b'7zl/7zlv7ylf7xlf7xlP7wlP7vkv7ukf7ukP7tkf3wlP3ukv3ukf3tkf3s' +
+                b'j/3rj/3rjv3qjf3pjP3nivzqjfzpjPzpi/zoi/znivznifzmivzmifzmiP' +
+                b'zliPzkh/zjhvzjhfzihfzhg/vkhvvihfvihPvhhPvgg/vfgvvfgfvdgPvd' +
+                b'f/vcf/vafPrcf/rafPrae/rZfPrXevrXefrWePrUdfrTdfnWefnUdvnUdf' +
+                b'nSdfnSdPnRc/nQcvnQcfnPcPnNb/nNbvjQcfjPcfjOcPjNbvjMbPjLbfjL' +
+                b'bPjKbPjKa/jJa/jJavjIafjHZ/jGaPfJaffIaffHZ/fGaPfGZ/fGZvfFZv' +
+                b'fEZffCYvTDtvSfm+xrdm4AO1oAJlcAJjkAJgAAAMDAwAAAAAAAAAAAAAAA' +
+                b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+                b'AAAAAAACH5BAEAAGsALAAAAAAUABQAAAfLgGuCg2tqhoeEiYOGEBgYHSgy' +
+                b'hoqChgMKCo6QKDU1k4RqA6IDEI0YkZ08P2qgAwEBmI2bNTyqrJUDlpeyh2' +
+                b'o/v7eGAIaxGGoAw4Y/SazCyZmOx8jKSUqHyMOyHdLTP0rWasaHj5u9atXg' +
+                b'KB2P5CiotL/fXYbu5vbn8oYy9WhoZv/90ghUowQLl2ad1PQ7w1CgQzVaDl' +
+                b'bi4WlhQ4dp1Bi8VYiHQoZnxpAhU6aMGi4SFwFjKHKkSYMpF/m6h/KTIkPf' +
+                b'lEQ8yJFSJXOUAgEAOw==')
+        self.makeconns({'c': (0, 1)})
+        for _ in range(100):
+            self.c['c'].send(data)
+            self.assertEqual(self.s['c'].recv(), data)
+            self.s['c'].send(data)
+            self.assertEqual(self.c['c'].recv(), data)
+
     def client_stress(self, MIN, MAX, TOTAL, data):
         # Verify that the data comes in in the right amount/order
         count = 0
@@ -212,7 +237,7 @@ class A1_Lossless_1x1(BaseNetworkTest):
             self.assertEqual(incoming, data[ofs:ofs+b])
             count += b
 
-    def test_05_stress(self):
+    def test_06_stress(self):
         """A lot of data can be sent and received"""
         self.makeconns({'c': (0, 1)})
         # Send 1 MB in random sizes of up to 1400 B
