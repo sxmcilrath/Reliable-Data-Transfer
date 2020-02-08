@@ -7,9 +7,9 @@ import binascii
 import threading
 from queue import Queue
 
-def _losstrials(loss):
+def _trialgen(prob):
     while True:
-        yield random.random() < loss
+        yield random.random() < prob
 
 def _hexdump(data):
     for ofs in range(0, len(data), 16):
@@ -25,7 +25,7 @@ class Network:
         if debug is None:
             debug = 'NET_DEBUG' in os.environ
         if not hasattr(loss, '__next__'):
-            loss = _losstrials(loss)
+            loss = _trialgen(loss)
         self.hosts = {}
         self.loss = loss
         self.debug = debug
