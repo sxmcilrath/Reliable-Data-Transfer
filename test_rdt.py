@@ -18,6 +18,7 @@ class BaseNetworkTest(unittest.TestCase):
     PROTO = RDTProtocol
     # Provide defaults
     LOSS = 0.00
+    PER = 0.00
     # List of client socket addresses (bound if port is not None)
     CLIENTS = []
     # List of listening socket addresses (port must be set)
@@ -57,7 +58,7 @@ class BaseNetworkTest(unittest.TestCase):
         pid = type(self).PROTO.getid()
 
         # Create network and hosts
-        n = Network(loss=type(self).LOSS)
+        n = Network(loss=type(self).LOSS, per=type(self).PER)
         self.h = {}
         # Use set comprehension to eliminate duplicates
         for ip in {fst for fst, _ in itertools.chain(caddrs, laddrs)}:
@@ -349,6 +350,19 @@ class D5_Lose10_2x1(A5_Lossless_2x1):
     LOSS = 0.10
 class D6_Lose10_2x1_SameHost(A6_Lossless_2x1_SameHost):
     LOSS = 0.10
+
+# class E1_Corrupt02_1x1(A1_Lossless_1x1):
+#     PER = 0.02
+# class E2_Corrupt02_SameHost(A2_Lossless_SameHost):
+#     PER = 0.02
+# class E3_Corrupt02_1x2(A3_Lossless_1x2):
+#     PER = 0.02
+# class E4_Corrupt02_1x2_SameHost(A4_Lossless_1x2_SameHost):
+#     PER = 0.02
+# class E5_Corrupt02_2x1(A5_Lossless_2x1):
+#     PER = 0.02
+# class E6_Corrupt02_2x1_SameHost(A6_Lossless_2x1_SameHost):
+#     PER = 0.02
 
 if __name__ == '__main__':
     unittest.main()
