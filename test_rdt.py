@@ -390,5 +390,24 @@ class F5_Lose10_2x1(A5_Lossless_2x1):
 class F6_Lose10_2x1_SameHost(A6_Lossless_2x1_SameHost):
     LOSS = 0.10
 
+class G1_Corrupt10Lose10_1x1(A1_Lossless_1x1):
+    LOSS = 0.10
+    PER = 0.10
+class G2_Corrupt10Lose10_SameHost(A2_Lossless_SameHost):
+    LOSS = 0.10
+    PER = 0.10
+class G3_Corrupt10Lose10_1x2(A3_Lossless_1x2):
+    LOSS = 0.10
+    PER = 0.10
+class G4_Corrupt10Lose10_1x2_SameHost(A4_Lossless_1x2_SameHost):
+    LOSS = 0.10
+    PER = 0.10
+class G5_Corrupt10Lose10_2x1(A5_Lossless_2x1):
+    LOSS = 0.10
+    PER = 0.10
+class G6_Corrupt10Lose10_2x1_SameHost(A6_Lossless_2x1_SameHost):
+    LOSS = 0.10
+    PER = 0.10
+
 if __name__ == '__main__':
     unittest.main()
