@@ -273,5 +273,13 @@ class H_StreamSocketTest(unittest.TestCase):
         self.assertEqual(self.ss.recv(3), b"hel")
         self.assertEqual(self.ss.recv(), b"lo world")
 
+    def test_deliver_split(self):
+        self.ss.deliver(b"hello")
+        self.assertEqual(self.ss.recv(3), b"hel")
+
+        self.ss.deliver(b" world")
+        self.assertEqual(self.ss.recv(4), b"lo w")
+        self.assertEqual(self.ss.recv(), b"orld")
+
 if __name__ == '__main__':
     unittest.main()
