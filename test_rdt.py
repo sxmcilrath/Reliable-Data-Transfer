@@ -87,7 +87,7 @@ class BaseNetworkTest(unittest.TestCase):
         self.c = {}
         self.makeconns(conns)
 
-class A_LosslessConnectTest(BaseNetworkTest):
+class A0_ErrorChecking(BaseNetworkTest):
     CLIENTS = [('10.50.254.1', None), ('10.50.254.1', None),
                ('10.50.254.2', None), ('10.50.254.2', None)]
     LISTEN = [('10.50.254.2', 3324), ('10.50.254.2', 26232)]
@@ -150,7 +150,7 @@ class A_LosslessConnectTest(BaseNetworkTest):
         with self.assertRaises(StreamSocket.NotConnected):
             self.c['c'].send(b'test-notconnected')
 
-class B_Lossless_1x1(BaseNetworkTest):
+class A1_Lossless_1x1(BaseNetworkTest):
     CLIENTS = [('192.168.10.1', None), ('192.168.10.2', None)]
     LISTEN = [('192.168.10.1', 26093), ('192.168.10.2', 2531)]
     CONNS = {'a': (0, None), 'b': (1, None)}
@@ -224,7 +224,7 @@ class B_Lossless_1x1(BaseNetworkTest):
             ofs = count % MAX
             self.c['c'].send(data[ofs:ofs+b])
 
-class C_Lossless_SameHost(B_Lossless_1x1):
+class A2_Lossless_SameHost(A1_Lossless_1x1):
     """Runs the Lossless 1x1 tests between two sockets on a single host"""
     CLIENTS = [('92.68.10.1', None), ('92.68.10.1', None)]
 
@@ -233,7 +233,7 @@ def _serversock(sock, port):
     sock.listen()
     return sock
 
-class D_Lossless_1x2(BaseNetworkTest):
+class A3_Lossless_1x2(BaseNetworkTest):
     CLIENTS = [('172.16.170.22', None), ('172.16.170.22', None)]
     LISTEN = [('172.16.170.111', 20956), ('172.16.170.3', 1255)]
     CONNS = {'a': (0, 0), 'b': (1, 1)}
@@ -252,12 +252,12 @@ class D_Lossless_1x2(BaseNetworkTest):
         self.assertEqual(self.s['b'].recv(), b'///test-mux///3')
         self.assertEqual(self.s['a'].recv(), b'test2/mux2')
 
-class E_Lossless_1x2_SameHost(D_Lossless_1x2):
+class A4_Lossless_1x2_SameHost(A3_Lossless_1x2):
     """Runs the Lossless 1x2 tests between three sockets on a single host"""
     CLIENTS = [('16.24.32.48', None), ('16.24.32.48', None)]
     LISTEN = [('16.24.32.48', 10956), ('16.24.32.48', 11255)]
 
-class F_Lossless_2x1(BaseNetworkTest):
+class A5_Lossless_2x1(BaseNetworkTest):
     CLIENTS = [('172.16.22.1', None), ('172.16.22.2', None)]
     LISTEN = [('172.16.22.3', 20063)]
     CONNS = {'a': (0, 0), 'b': (1, 0)}
@@ -291,11 +291,11 @@ class F_Lossless_2x1(BaseNetworkTest):
         self.assertEqual(self.c['a'].recv(), b'twoway_aaa_2x1')
         self.assertEqual(self.s['a'].recv(), b'aaa-test2x1twoway-aaa')
 
-class G_Lossless_2x1_SameHost(F_Lossless_2x1):
+class A6_Lossless_2x1_SameHost(A5_Lossless_2x1):
     CLIENTS = [('8.8.4.4', None), ('8.8.4.4', None)]
     LISTEN = [('8.8.4.4', 20063)]
 
-class H_Lose5_1x1(BaseNetworkTest):
+class B0_Lose02_Connections(BaseNetworkTest):
     LOSS = 0.05
     CLIENTS = [('192.168.40.{}'.format(x), None) for x in range(100)]
     LISTEN = [('192.168.50.{}'.format(x), 36000 + x) for x in range(100)]
@@ -304,18 +304,44 @@ class H_Lose5_1x1(BaseNetworkTest):
     def test_00_connectall(self):
         self.makeconns({x: (x, x) for x in range(100)})
 
-class I_Lose5_1x1(B_Lossless_1x1):
+class B1_Lose02_1x1(A1_Lossless_1x1):
+    LOSS = 0.02
+class B2_Lose02_SameHost(A2_Lossless_SameHost):
+    LOSS = 0.02
+class B3_Lose02_1x2(A3_Lossless_1x2):
+    LOSS = 0.02
+class B4_Lose02_1x2_SameHost(A4_Lossless_1x2_SameHost):
+    LOSS = 0.02
+class B5_Lose02_2x1(A5_Lossless_2x1):
+    LOSS = 0.02
+class B6_Lose02_2x1_SameHost(A6_Lossless_2x1_SameHost):
+    LOSS = 0.02
+
+class C1_Lose05_1x1(A1_Lossless_1x1):
     LOSS = 0.05
-class J_Lose5_SameHost(C_Lossless_SameHost):
+class C2_Lose05_SameHost(A2_Lossless_SameHost):
     LOSS = 0.05
-class K_Lose5_1x2(D_Lossless_1x2):
+class C3_Lose05_1x2(A3_Lossless_1x2):
     LOSS = 0.05
-class L_Lose5_1x2_SameHost(E_Lossless_1x2_SameHost):
+class C4_Lose05_1x2_SameHost(A4_Lossless_1x2_SameHost):
     LOSS = 0.05
-class M_Lose5_2x1(F_Lossless_2x1):
+class C5_Lose05_2x1(A5_Lossless_2x1):
     LOSS = 0.05
-class N_Lose5_2x1_SameHost(G_Lossless_2x1_SameHost):
+class C6_Lose05_2x1_SameHost(A6_Lossless_2x1_SameHost):
     LOSS = 0.05
+
+class D1_Lose10_1x1(A1_Lossless_1x1):
+    LOSS = 0.10
+class D2_Lose10_SameHost(A2_Lossless_SameHost):
+    LOSS = 0.10
+class D3_Lose10_1x2(A3_Lossless_1x2):
+    LOSS = 0.10
+class D4_Lose10_1x2_SameHost(A4_Lossless_1x2_SameHost):
+    LOSS = 0.10
+class D5_Lose10_2x1(A5_Lossless_2x1):
+    LOSS = 0.10
+class D6_Lose10_2x1_SameHost(A6_Lossless_2x1_SameHost):
+    LOSS = 0.10
 
 if __name__ == '__main__':
     unittest.main()
