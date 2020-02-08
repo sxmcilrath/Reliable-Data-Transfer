@@ -30,7 +30,7 @@ class PC2(Protocol):
         super().__init__(*args, **kwargs)
         type(self).last_inst = self
 
-class A_NetworkTest(unittest.TestCase):
+class A0_NetworkTest(unittest.TestCase):
     def setUp(self):
         self.n = Network()
         self.mh = mock.MagicMock(name='host 1', spec=Host)
@@ -92,45 +92,56 @@ class A_NetworkTest(unittest.TestCase):
         self.n.attach(mh3, '192.168.10.3')
         mh3.input.assert_not_called()
 
-class AA_LossyNetworkTest(unittest.TestCase):
+class A1_LossyNetworkTest(unittest.TestCase):
     def setUp(self):
         self.mh = mock.MagicMock(name='host', spec=Host)
 
-    def test_10pct(self):
-        n = Network(10/100)
+    def _test_loss(self, pct):
+        n = Network(loss=pct/100)
         n.attach(self.mh, '192.168.10.1')
-        count = 0
+        data = 'test-{}pct-loss'.format(pct).encode()
         for i in range(10000):
-            n.tx(7, b'test-10pct', '192.168.10.2', '192.168.10.1')
-            if self.mh.input.called:
-                count += 1
-                self.mh.reset_mock()
-        self.assertLessEqual(count, 9200, 'significantly < 10% loss')
-        self.assertGreaterEqual(count, 8800, 'significantly > 10% loss')
+            n.tx(7, data, '192.168.10.2', '192.168.10.1')
+        lost = 10000 - self.mh.input.call_count
+        self.assertGreaterEqual(lost, 80 * pct, 'significantly < {}% loss'.format(pct))
+        self.assertLessEqual(lost, 120 * pct, 'significantly > {}% loss'.format(pct))
+
+    def test_10pct(self):
+        self._test_loss(10)
 
     def test_50pct(self):
-        n = Network(50/100)
-        n.attach(self.mh, '192.168.10.1')
-        count = 0
-        for i in range(10000):
-            n.tx(7, b'test-50pct', '192.168.10.2', '192.168.10.1')
-            if self.mh.input.called:
-                count += 1
-                self.mh.reset_mock()
-        self.assertLessEqual(count, 5200, 'significantly < 50% loss')
-        self.assertGreaterEqual(count, 4800, 'significantly > 50% loss')
+        self._test_loss(50)
 
     def test_90pct(self):
-        n = Network(90/100)
-        n.attach(self.mh, '192.168.10.1')
-        count = 0
+        self._test_loss(90)
+
+class A2_ErrorNetworkTest(unittest.TestCase):
+    def setUp(self):
+        self.mh = mock.MagicMock(name='host', spec=Host)
+
+    def _test_corruption(self, pct):
+        pct = 10
+        n = Network(per=pct/100)
+        n.attach(self.mh, '192.168.11.11')
+        corrupt = 0
+        data = 'test-{}pct-errors'.format(pct).encode()
         for i in range(10000):
-            n.tx(7, b'test-90pct', '192.168.10.2', '192.168.10.1')
-            if self.mh.input.called:
-                count += 1
-                self.mh.reset_mock()
-        self.assertLessEqual(count, 1200, 'significantly < 90% loss')
-        self.assertGreaterEqual(count, 800, 'significantly > 90% loss')
+            n.tx(7, data, '192.168.22.22', '192.168.11.11')
+            if self.mh.input.call_args.args[1] != data:
+                corrupt += 1
+        self.assertEqual(self.mh.input.call_count, 10000)
+        self.assertGreaterEqual(corrupt, 80 * pct, 'significantly < {}% corruption'.format(pct))
+        self.assertLessEqual(corrupt, 120 * pct, 'significantly > {}% corruption'.format(pct))
+
+    def test_10pct(self):
+        self._test_corruption(10)
+
+    def test_50pct(self):
+        self._test_corruption(50)
+
+    def test_90pct(self):
+        self._test_corruption(90)
+
 
 class B_HostTest(unittest.TestCase):
     def setUp(self):

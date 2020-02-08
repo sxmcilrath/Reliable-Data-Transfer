@@ -21,13 +21,16 @@ def _hexdump(data):
     print('%08x' % (len(data),), file=sys.stderr)
 
 class Network:
-    def __init__(self, loss=0.0, debug=None):
+    def __init__(self, loss=0.0, per=0.0, debug=None):
         if debug is None:
             debug = 'NET_DEBUG' in os.environ
         if not hasattr(loss, '__next__'):
             loss = _trialgen(loss)
+        if not hasattr(per, '__next__'):
+            per = _trialgen(per)
         self.hosts = {}
         self.loss = loss
+        self.per = per
         self.debug = debug
 
     def attach(self, host, ip):
@@ -48,6 +51,9 @@ class Network:
                     file=sys.stderr)
             _hexdump(data)
         if not lose and dst in self.hosts:
+            if next(self.per):
+                pos = random.randint(0, len(data) - 1)
+                data = data[:pos] + bytes((random.randint(0, 255),)) + data[pos+1:]
             self.hosts[dst].input(proto, data, src)
         return len(data)
 
