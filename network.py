@@ -184,6 +184,12 @@ class StreamSocket(Socket):
         things
         """
 
+    class AlreadyListening(Exception):
+        """
+        Exception raised when attempting to connect using a socket that is
+        already listening
+        """
+
     class NotConnected(Exception):
         """
         Exception raised when attempting to send on a stream socket which is

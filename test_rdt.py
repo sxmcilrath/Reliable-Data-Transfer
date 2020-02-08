@@ -93,7 +93,7 @@ class A0_ErrorChecking(BaseNetworkTest):
     CLIENTS = [('10.50.254.1', None), ('10.50.254.1', None),
                ('10.50.254.2', None), ('10.50.254.2', None)]
     LISTEN = [('10.50.254.2', 3324), ('10.50.254.2', 26232)]
-    CONNS = {'a': (0, None), 'b': (1, None), 'c': (2, None), 'd': (3, None)}
+    CONNS = {'a': (0, None), 'b': (1, None), 'c': (2, None), 'd': (3, None), 'l': (None, 0)}
 
     def test_00_bind_namespace(self):
         """Different hosts can bind the same port number"""
@@ -151,6 +151,11 @@ class A0_ErrorChecking(BaseNetworkTest):
         self.c['c'].bind(9532)
         with self.assertRaises(StreamSocket.NotConnected):
             self.c['c'].send(b'test-notconnected')
+
+    def test_10_connectafterlisten(self):
+        """Connect cannot be called after listen"""
+        with self.assertRaises(StreamSocket.AlreadyListening):
+            self.l['l'].connect(type(self).LISTEN[1])
 
 class A1_Lossless_1x1(BaseNetworkTest):
     CLIENTS = [('192.168.10.1', None), ('192.168.10.2', None)]
