@@ -351,18 +351,44 @@ class D5_Lose10_2x1(A5_Lossless_2x1):
 class D6_Lose10_2x1_SameHost(A6_Lossless_2x1_SameHost):
     LOSS = 0.10
 
-# class E1_Corrupt02_1x1(A1_Lossless_1x1):
-#     PER = 0.02
-# class E2_Corrupt02_SameHost(A2_Lossless_SameHost):
-#     PER = 0.02
-# class E3_Corrupt02_1x2(A3_Lossless_1x2):
-#     PER = 0.02
-# class E4_Corrupt02_1x2_SameHost(A4_Lossless_1x2_SameHost):
-#     PER = 0.02
-# class E5_Corrupt02_2x1(A5_Lossless_2x1):
-#     PER = 0.02
-# class E6_Corrupt02_2x1_SameHost(A6_Lossless_2x1_SameHost):
-#     PER = 0.02
+class E1_Corrupt02_1x1(A1_Lossless_1x1):
+    PER = 0.02
+class E2_Corrupt02_SameHost(A2_Lossless_SameHost):
+    PER = 0.02
+class E3_Corrupt02_1x2(A3_Lossless_1x2):
+    PER = 0.02
+class E4_Corrupt02_1x2_SameHost(A4_Lossless_1x2_SameHost):
+    PER = 0.02
+class E5_Corrupt02_2x1(A5_Lossless_2x1):
+    PER = 0.02
+class E6_Corrupt02_2x1_SameHost(A6_Lossless_2x1_SameHost):
+    PER = 0.02
+
+class F1_Corrupt05_1x1(A1_Lossless_1x1):
+    PER = 0.05
+class F2_Corrupt05_SameHost(A2_Lossless_SameHost):
+    PER = 0.05
+class F3_Corrupt05_1x2(A3_Lossless_1x2):
+    PER = 0.05
+class F4_Corrupt05_1x2_SameHost(A4_Lossless_1x2_SameHost):
+    PER = 0.05
+class F5_Corrupt05_2x1(A5_Lossless_2x1):
+    PER = 0.05
+class F6_Corrupt05_2x1_SameHost(A6_Lossless_2x1_SameHost):
+    PER = 0.05
+
+class G1_Corrupt10_1x1(A1_Lossless_1x1):
+    PER = 0.10
+class G2_Corrupt10_SameHost(A2_Lossless_SameHost):
+    PER = 0.10
+class G3_Corrupt10_1x2(A3_Lossless_1x2):
+    PER = 0.10
+class G4_Corrupt10_1x2_SameHost(A4_Lossless_1x2_SameHost):
+    PER = 0.10
+class G5_Corrupt10_2x1(A5_Lossless_2x1):
+    PER = 0.10
+class G6_Corrupt10_2x1_SameHost(A6_Lossless_2x1_SameHost):
+    PER = 0.10
 
 if __name__ == '__main__':
     unittest.main()
