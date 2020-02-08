@@ -121,7 +121,8 @@ class Socket:
 
     def input(self, seg, host):
         """
-        Called whenever a segment from a source host arrives at this socket
+        Called by the protocol when it receives a segment from a source host
+        and determines that it belongs to this particular socket.
 
         This method should handle any socket-level receive behavior such as
         sending acknowledgments, resetting timers, or updating sliding windows.
@@ -310,8 +311,8 @@ class Protocol:
         Called when a segment is received for this protocol from the given
         source address
 
-        This method should perform demultiplexing to determine the appropriate
-        destination socket, then pass the segment and source address to the
-        input() method on that socket.
+        This method should handle any protocol-level receive behavior such as
+        demultiplexing and error detection, then pass the segment and source
+        address to the input() method on that socket.
         """
         raise NotImplementedError
