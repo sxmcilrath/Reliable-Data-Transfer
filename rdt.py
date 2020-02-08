@@ -1,10 +1,8 @@
-import sys
-import threading
-import collections
-import queue
-from network import *
+from network import Protocol, StreamSocket
 
+# Reserved protocol number for experiments; see RFC 3692
 IPPROTO_RDT = 0xfe
+
 
 class RDTSocket(StreamSocket):
     def __init__(self, *args, **kwargs):
@@ -25,6 +23,7 @@ class RDTSocket(StreamSocket):
 
     def send(self, data):
         pass
+
 
 class RDTProtocol(Protocol):
     PROTO_ID = IPPROTO_RDT

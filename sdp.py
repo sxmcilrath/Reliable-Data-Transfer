@@ -1,4 +1,5 @@
-from network import *
+from network import Protocol, DatagramSocket
+
 
 class SampleDatagramSocket(DatagramSocket):
     """Socket class for SampleDatagramProtocol"""
@@ -9,6 +10,7 @@ class SampleDatagramSocket(DatagramSocket):
     def sendto(self, msg, dst):
         # SDP has no header; segment = message
         self.output(msg, dst)
+
 
 class SampleDatagramProtocol(Protocol):
     """

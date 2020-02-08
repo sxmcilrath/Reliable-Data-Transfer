@@ -1,15 +1,14 @@
-#!/usr/bin/env python3
-
 import sys
 import os
 import random
-import binascii
 import threading
 from queue import Queue
+
 
 def _trialgen(prob):
     while True:
         yield random.random() < prob
+
 
 def _hexdump(data):
     for ofs in range(0, len(data), 16):
@@ -17,8 +16,10 @@ def _hexdump(data):
         hex1 = ' '.join('%02x' % c for c in line[:8])
         hex2 = ' '.join('%02x' % c for c in line[8:])
         disp = ''.join(chr(c) if c in range(32, 128) else '.' for c in line)
-        print('%08x  %-23s  %-23s  |%s|' % (ofs, hex1, hex2, disp), file=sys.stderr)
+        print('%08x  %-23s  %-23s  |%s|' % (ofs, hex1, hex2, disp),
+              file=sys.stderr)
     print('%08x' % (len(data),), file=sys.stderr)
+
 
 class Network:
     def __init__(self, loss=0.0, per=0.0, debug=None):
@@ -36,26 +37,28 @@ class Network:
     def attach(self, host, ip):
         if ip in self.hosts:
             raise ValueError("Address {} already exists on network"
-                    .format(ip))
+                             .format(ip))
         self.hosts[ip] = host
 
     def tx(self, proto, data, src, dst):
         # Ensure all transmitted data is encoded to bytes
         if not isinstance(data, bytes):
             raise TypeError("Network can only send bytes, not {}"
-                    .format(type(data).__name__))
+                            .format(type(data).__name__))
         # TODO: add delay and reordering
         lose = next(self.loss)
         if self.debug:
             print('%s -> %s%s' % (src, dst, ' (LOST!)' if lose else ''),
-                    file=sys.stderr)
+                  file=sys.stderr)
             _hexdump(data)
         if not lose and dst in self.hosts:
             if next(self.per):
                 pos = random.randint(0, len(data) - 1)
-                data = data[:pos] + bytes((random.randint(0, 255),)) + data[pos+1:]
+                byte = random.randint(0, 255)
+                data = data[:pos] + bytes((byte,)) + data[pos+1:]
             self.hosts[dst].input(proto, data, src)
         return len(data)
+
 
 # Handles:
 #  - net_address
@@ -77,7 +80,7 @@ class Host:
             if isinstance(self.protos[pid], class_):
                 return
             raise ValueError("Protocol ID %d already registered to %s" %
-                    (pid, type(self.protos[pid]).__name__))
+                             (pid, type(self.protos[pid]).__name__))
         self.protos[pid] = class_(self)
 
     def socket(self, proto):
@@ -88,6 +91,7 @@ class Host:
 
     def input(self, proto, data, src):
         self.protos[proto].input(data, src)
+
 
 class Socket:
     """Base class for sockets associated with a particular protocol"""
@@ -129,6 +133,7 @@ class Socket:
         """
         raise NotImplementedError
 
+
 class DatagramSocket(Socket):
     """
     Base class for sockets with datagram semantics
@@ -164,6 +169,7 @@ class DatagramSocket(Socket):
 
     def sendto(self, msg, dst):
         raise NotImplementedError
+
 
 class StreamSocket(Socket):
     """Base class for sockets with stream semantics"""
@@ -272,6 +278,7 @@ class StreamSocket(Socket):
         StreamSocket.NotConnected.
         """
         raise NotImplementedError
+
 
 class Protocol:
     """
