@@ -214,8 +214,8 @@ class A1_Lossless_1x1(BaseNetworkTest):
     def test_05_stress(self):
         """A lot of data can be sent and received"""
         self.makeconns({'c': (0, 1)})
-        # Send 4 MB in random sizes of up to 1400 B
-        MIN, MAX, TOTAL = 1, 1400, 2 ** 22
+        # Send 1 MB in random sizes of up to 1400 B
+        MIN, MAX, TOTAL = 1, 1400, 2 ** 20
         data = b'0123456789' * (MAX // 5)
         with ExThread(target=self.client_stress, args=(MIN, MAX, TOTAL, data)) as cthr:
             count = 0
