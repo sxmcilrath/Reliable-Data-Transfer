@@ -312,83 +312,83 @@ class B0_Lose02_Connections(BaseNetworkTest):
     def test_00_connectall(self):
         self.makeconns({x: (x, x) for x in range(100)})
 
-class B1_Lose02_1x1(A1_Lossless_1x1):
-    LOSS = 0.02
-class B2_Lose02_SameHost(A2_Lossless_SameHost):
-    LOSS = 0.02
-class B3_Lose02_1x2(A3_Lossless_1x2):
-    LOSS = 0.02
-class B4_Lose02_1x2_SameHost(A4_Lossless_1x2_SameHost):
-    LOSS = 0.02
-class B5_Lose02_2x1(A5_Lossless_2x1):
-    LOSS = 0.02
-class B6_Lose02_2x1_SameHost(A6_Lossless_2x1_SameHost):
-    LOSS = 0.02
-
-class C1_Lose05_1x1(A1_Lossless_1x1):
-    LOSS = 0.05
-class C2_Lose05_SameHost(A2_Lossless_SameHost):
-    LOSS = 0.05
-class C3_Lose05_1x2(A3_Lossless_1x2):
-    LOSS = 0.05
-class C4_Lose05_1x2_SameHost(A4_Lossless_1x2_SameHost):
-    LOSS = 0.05
-class C5_Lose05_2x1(A5_Lossless_2x1):
-    LOSS = 0.05
-class C6_Lose05_2x1_SameHost(A6_Lossless_2x1_SameHost):
-    LOSS = 0.05
-
-class D1_Lose10_1x1(A1_Lossless_1x1):
-    LOSS = 0.10
-class D2_Lose10_SameHost(A2_Lossless_SameHost):
-    LOSS = 0.10
-class D3_Lose10_1x2(A3_Lossless_1x2):
-    LOSS = 0.10
-class D4_Lose10_1x2_SameHost(A4_Lossless_1x2_SameHost):
-    LOSS = 0.10
-class D5_Lose10_2x1(A5_Lossless_2x1):
-    LOSS = 0.10
-class D6_Lose10_2x1_SameHost(A6_Lossless_2x1_SameHost):
-    LOSS = 0.10
-
-class E1_Corrupt02_1x1(A1_Lossless_1x1):
+class B1_Corrupt02_1x1(A1_Lossless_1x1):
     PER = 0.02
-class E2_Corrupt02_SameHost(A2_Lossless_SameHost):
+class B2_Corrupt02_SameHost(A2_Lossless_SameHost):
     PER = 0.02
-class E3_Corrupt02_1x2(A3_Lossless_1x2):
+class B3_Corrupt02_1x2(A3_Lossless_1x2):
     PER = 0.02
-class E4_Corrupt02_1x2_SameHost(A4_Lossless_1x2_SameHost):
+class B4_Corrupt02_1x2_SameHost(A4_Lossless_1x2_SameHost):
     PER = 0.02
-class E5_Corrupt02_2x1(A5_Lossless_2x1):
+class B5_Corrupt02_2x1(A5_Lossless_2x1):
     PER = 0.02
-class E6_Corrupt02_2x1_SameHost(A6_Lossless_2x1_SameHost):
+class B6_Corrupt02_2x1_SameHost(A6_Lossless_2x1_SameHost):
     PER = 0.02
 
-class F1_Corrupt05_1x1(A1_Lossless_1x1):
+class C1_Corrupt05_1x1(A1_Lossless_1x1):
     PER = 0.05
-class F2_Corrupt05_SameHost(A2_Lossless_SameHost):
+class C2_Corrupt05_SameHost(A2_Lossless_SameHost):
     PER = 0.05
-class F3_Corrupt05_1x2(A3_Lossless_1x2):
+class C3_Corrupt05_1x2(A3_Lossless_1x2):
     PER = 0.05
-class F4_Corrupt05_1x2_SameHost(A4_Lossless_1x2_SameHost):
+class C4_Corrupt05_1x2_SameHost(A4_Lossless_1x2_SameHost):
     PER = 0.05
-class F5_Corrupt05_2x1(A5_Lossless_2x1):
+class C5_Corrupt05_2x1(A5_Lossless_2x1):
     PER = 0.05
-class F6_Corrupt05_2x1_SameHost(A6_Lossless_2x1_SameHost):
+class C6_Corrupt05_2x1_SameHost(A6_Lossless_2x1_SameHost):
     PER = 0.05
 
-class G1_Corrupt10_1x1(A1_Lossless_1x1):
+class D1_Corrupt10_1x1(A1_Lossless_1x1):
     PER = 0.10
-class G2_Corrupt10_SameHost(A2_Lossless_SameHost):
+class D2_Corrupt10_SameHost(A2_Lossless_SameHost):
     PER = 0.10
-class G3_Corrupt10_1x2(A3_Lossless_1x2):
+class D3_Corrupt10_1x2(A3_Lossless_1x2):
     PER = 0.10
-class G4_Corrupt10_1x2_SameHost(A4_Lossless_1x2_SameHost):
+class D4_Corrupt10_1x2_SameHost(A4_Lossless_1x2_SameHost):
     PER = 0.10
-class G5_Corrupt10_2x1(A5_Lossless_2x1):
+class D5_Corrupt10_2x1(A5_Lossless_2x1):
     PER = 0.10
-class G6_Corrupt10_2x1_SameHost(A6_Lossless_2x1_SameHost):
+class D6_Corrupt10_2x1_SameHost(A6_Lossless_2x1_SameHost):
     PER = 0.10
+
+class D1_Lose02_1x1(A1_Lossless_1x1):
+    LOSS = 0.02
+class D2_Lose02_SameHost(A2_Lossless_SameHost):
+    LOSS = 0.02
+class D3_Lose02_1x2(A3_Lossless_1x2):
+    LOSS = 0.02
+class D4_Lose02_1x2_SameHost(A4_Lossless_1x2_SameHost):
+    LOSS = 0.02
+class D5_Lose02_2x1(A5_Lossless_2x1):
+    LOSS = 0.02
+class D6_Lose02_2x1_SameHost(A6_Lossless_2x1_SameHost):
+    LOSS = 0.02
+
+class E1_Lose05_1x1(A1_Lossless_1x1):
+    LOSS = 0.05
+class E2_Lose05_SameHost(A2_Lossless_SameHost):
+    LOSS = 0.05
+class E3_Lose05_1x2(A3_Lossless_1x2):
+    LOSS = 0.05
+class E4_Lose05_1x2_SameHost(A4_Lossless_1x2_SameHost):
+    LOSS = 0.05
+class E5_Lose05_2x1(A5_Lossless_2x1):
+    LOSS = 0.05
+class E6_Lose05_2x1_SameHost(A6_Lossless_2x1_SameHost):
+    LOSS = 0.05
+
+class F1_Lose10_1x1(A1_Lossless_1x1):
+    LOSS = 0.10
+class F2_Lose10_SameHost(A2_Lossless_SameHost):
+    LOSS = 0.10
+class F3_Lose10_1x2(A3_Lossless_1x2):
+    LOSS = 0.10
+class F4_Lose10_1x2_SameHost(A4_Lossless_1x2_SameHost):
+    LOSS = 0.10
+class F5_Lose10_2x1(A5_Lossless_2x1):
+    LOSS = 0.10
+class F6_Lose10_2x1_SameHost(A6_Lossless_2x1_SameHost):
+    LOSS = 0.10
 
 if __name__ == '__main__':
     unittest.main()
