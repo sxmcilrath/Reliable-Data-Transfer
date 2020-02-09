@@ -209,7 +209,15 @@ class A1_Lossless_1x1(BaseNetworkTest):
             self.assertEqual(self.c['c'].recv(), b'test-twoway2')
 
     def test_05_binary(self):
+        """Binary data can be sent"""
         data = base64.b64decode(
+                b'AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKi' +
+                b'ssLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVW' +
+                b'V1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgY' +
+                b'KDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6yt' +
+                b'rq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2N' +
+                b'na29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/w==')
+        data2 = base64.b64decode(
                 b'R0lGODlhFAAUAPZqAP/////5nf/4m//3m//2mv/0mP73m/72mv71mf70mP' +
                 b'7zl/7zlv7ylf7xlf7xlP7wlP7vkv7ukf7ukP7tkf3wlP3ukv3ukf3tkf3s' +
                 b'j/3rj/3rjv3qjf3pjP3nivzqjfzpjPzpi/zoi/znivznifzmivzmifzmiP' +
@@ -228,9 +236,9 @@ class A1_Lossless_1x1(BaseNetworkTest):
         self.makeconns({'c': (0, 1)})
         for _ in range(100):
             self.c['c'].send(data)
+            self.s['c'].send(data2)
             self.assertEqual(self.s['c'].recv(), data)
-            self.s['c'].send(data)
-            self.assertEqual(self.c['c'].recv(), data)
+            self.assertEqual(self.c['c'].recv(), data2)
 
     def client_stress(self, MIN, MAX, TOTAL, data):
         # Verify that the data comes in in the right amount/order
