@@ -307,6 +307,7 @@ class A5_Lossless_2x1(BaseNetworkTest):
     CONNS = {'a': (0, 0), 'b': (1, 0)}
 
     def test_00_oneway(self):
+        """Server can distinguish data from different clients"""
         for _ in range(100):
             self.c['a'].send(b'aaa-test2x1oneway-aaa')
             self.c['b'].send(b'bbb-test2x1oneway-bbb')
@@ -318,6 +319,7 @@ class A5_Lossless_2x1(BaseNetworkTest):
             self.assertEqual(self.s['a'].recv(), b'AAA-TEST2X1ONEWAY-AAA')
 
     def test_01_twoway(self):
+        """Server can reply to different clients"""
         for _ in range(100):
             self.c['a'].send(b'aaa-test2x1twoway-aaa')
             self.c['b'].send(b'bbb-test2x1twoway-bbb')
