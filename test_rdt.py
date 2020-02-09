@@ -341,15 +341,6 @@ class A6_Lossless_2x1_SameHost(A5_Lossless_2x1):
     CLIENTS = [('8.8.4.4', None), ('8.8.4.4', None)]
     LISTEN = [('8.8.4.4', 20063)]
 
-class B0_Lose02_Connections(BaseNetworkTest):
-    LOSS = 0.05
-    CLIENTS = [('192.168.40.{}'.format(x), None) for x in range(100)]
-    LISTEN = [('192.168.50.{}'.format(x), 36000 + x) for x in range(100)]
-    CONNS = {x: (x, None) for x in range(100)}
-
-    def test_00_connectall(self):
-        self.makeconns({x: (x, x) for x in range(100)})
-
 class B1_Corrupt02_1x1(A1_Lossless_1x1):
     PER = 0.02
 class B2_Corrupt02_SameHost(A2_Lossless_SameHost):
