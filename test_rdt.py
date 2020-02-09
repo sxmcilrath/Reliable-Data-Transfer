@@ -179,34 +179,40 @@ class A1_Lossless_1x1(BaseNetworkTest):
     def test_01_oneway(self):
         """Data can be sent in one direction"""
         self.makeconns({'c': (0, 1)})
-        for _ in range(100):
-            self.c['c'].send(b'test-oneway')
-            self.assertEqual(self.s['c'].recv(), b'test-oneway')
+        for i in range(100):
+            data = b'test-oneway' + str(i).encode()
+            self.c['c'].send(data)
+            self.assertEqual(self.s['c'].recv(), data)
 
     def test_02_otherway(self):
         """Data can be sent in the other direction"""
         self.makeconns({'c': (1, 0)})
-        for _ in range(100):
-            self.c['c'].send(b'test-otherway')
-            self.assertEqual(self.s['c'].recv(), b'test-otherway')
+        for i in range(100):
+            data = b'test-otherway' + str(i).encode()
+            self.c['c'].send(data)
+            self.assertEqual(self.s['c'].recv(), data)
 
     def test_03_oneway_pcs(self):
         """Multiple pieces of data are made into one stream"""
         self.makeconns({'c': (0, 1)})
-        for _ in range(100):
+        for i in range(100):
+            self.c['c'].send(b'')
             self.c['c'].send(b'test-onew')
             self.c['c'].send(b'')
-            self.c['c'].send(b'ay-pcs')
-            self.assertEqual(self.s['c'].recv(), b'test-oneway-pcs')
+            self.c['c'].send(b'ay-pcs' + str(i).encode())
+            self.assertEqual(self.s['c'].recv(),
+                             b'test-oneway-pcs' + str(i).encode())
 
     def test_04_twoway(self):
-        """Data can be sent both ways over a connected socket"""
+        """Data can be sent both directions over a connected socket"""
         self.makeconns({'c': (0, 1)})
-        for _ in range(100):
-            self.c['c'].send(b'test-twoway1')
-            self.assertEqual(self.s['c'].recv(), b'test-twoway1')
-            self.s['c'].send(b'test-twoway2')
-            self.assertEqual(self.c['c'].recv(), b'test-twoway2')
+        for i in range(100):
+            data = b'test-twowayC->S' + str(i).encode()
+            data2 = b'test-twowayS->C' + str(i).encode()
+            self.c['c'].send(data)
+            self.assertEqual(self.s['c'].recv(), data)
+            self.s['c'].send(data2)
+            self.assertEqual(self.c['c'].recv(), data2)
 
     def test_05_binary(self):
         """Binary data can be sent"""
@@ -234,11 +240,13 @@ class A1_Lossless_1x1(BaseNetworkTest):
                 b'bi4WlhQ4dp1Bi8VYiHQoZnxpAhU6aMGi4SFwFjKHKkSYMpF/m6h/KTIkPf' +
                 b'lEQ8yJFSJXOUAgEAOw==')
         self.makeconns({'c': (0, 1)})
-        for _ in range(100):
+        for i in range(100):
             self.c['c'].send(data)
             self.s['c'].send(data2)
-            self.assertEqual(self.s['c'].recv(), data)
-            self.assertEqual(self.c['c'].recv(), data2)
+            self.assertEqual(self.s['c'].recv(), data,
+                             'failed client->server iteration {}'.format(i))
+            self.assertEqual(self.c['c'].recv(), data2,
+                             'failed server->client iteration {}'.format(i))
 
     def client_stress(self, MIN, MAX, TOTAL, data):
         # Verify that the data comes in in the right amount/order
@@ -247,7 +255,8 @@ class A1_Lossless_1x1(BaseNetworkTest):
             incoming = self.s['c'].recv(MAX)
             b = len(incoming)
             ofs = count % MAX
-            self.assertEqual(incoming, data[ofs:ofs+b])
+            self.assertEqual(incoming, data[ofs:ofs+b],
+                             'in chunk starting with byte {}'.format(count))
             count += b
 
     def test_06_stress(self):
@@ -283,18 +292,22 @@ class A3_Lossless_1x2(BaseNetworkTest):
 
     def test_00_mux(self):
         """Multiple client sockets can coexist on a host"""
-        for _ in range(100):
+        for i in range(100):
             self.c['a'].send(b'2test-')
             self.c['b'].send(b'_te')
             self.c['b'].send(b'st3-3mux_')
             self.c['a'].send(b'mux2')
-            self.assertEqual(self.s['b'].recv(), b'_test3-3mux_')
-            self.assertEqual(self.s['a'].recv(), b'2test-mux2')
+            self.assertEqual(self.s['b'].recv(), b'_test3-3mux_',
+                             'iteration {}'.format(i))
+            self.assertEqual(self.s['a'].recv(), b'2test-mux2',
+                             'iteration {}'.format(i))
 
             self.c['a'].send(b'test2/mux2')
             self.c['b'].send(b'///test-mux///3')
-            self.assertEqual(self.s['b'].recv(), b'///test-mux///3')
-            self.assertEqual(self.s['a'].recv(), b'test2/mux2')
+            self.assertEqual(self.s['b'].recv(), b'///test-mux///3',
+                             'iteration {}'.format(i))
+            self.assertEqual(self.s['a'].recv(), b'test2/mux2',
+                             'iteration {}'.format(i))
 
 class A4_Lossless_1x2_SameHost(A3_Lossless_1x2):
     """Runs the Lossless 1x2 tests between three sockets on a single host"""
@@ -308,36 +321,48 @@ class A5_Lossless_2x1(BaseNetworkTest):
 
     def test_00_oneway(self):
         """Server can distinguish data from different clients"""
-        for _ in range(100):
+        for i in range(100):
             self.c['a'].send(b'aaa-test2x1oneway-aaa')
             self.c['b'].send(b'bbb-test2x1oneway-bbb')
-            self.assertEqual(self.s['a'].recv(), b'aaa-test2x1oneway-aaa')
-            self.assertEqual(self.s['b'].recv(), b'bbb-test2x1oneway-bbb')
+            self.assertEqual(self.s['a'].recv(), b'aaa-test2x1oneway-aaa',
+                             'iteration {}'.format(i))
+            self.assertEqual(self.s['b'].recv(), b'bbb-test2x1oneway-bbb',
+                             'iteration {}'.format(i))
             self.c['a'].send(b'AAA-TEST2X1ONEWAY-AAA')
             self.c['b'].send(b'BBB-TEST2X1ONEWAY-BBB')
-            self.assertEqual(self.s['b'].recv(), b'BBB-TEST2X1ONEWAY-BBB')
-            self.assertEqual(self.s['a'].recv(), b'AAA-TEST2X1ONEWAY-AAA')
+            self.assertEqual(self.s['b'].recv(), b'BBB-TEST2X1ONEWAY-BBB',
+                             'iteration {}'.format(i))
+            self.assertEqual(self.s['a'].recv(), b'AAA-TEST2X1ONEWAY-AAA',
+                             'iteration {}'.format(i))
 
     def test_01_twoway(self):
         """Server can reply to different clients"""
-        for _ in range(100):
+        for i in range(100):
             self.c['a'].send(b'aaa-test2x1twoway-aaa')
             self.c['b'].send(b'bbb-test2x1twoway-bbb')
             self.s['a'].send(b'twoway_aaa_2x1')
             self.s['b'].send(b'twoway_bbb_2x1')
-            self.assertEqual(self.s['a'].recv(), b'aaa-test2x1twoway-aaa')
-            self.assertEqual(self.c['a'].recv(), b'twoway_aaa_2x1')
-            self.assertEqual(self.s['b'].recv(), b'bbb-test2x1twoway-bbb')
-            self.assertEqual(self.c['b'].recv(), b'twoway_bbb_2x1')
+            self.assertEqual(self.s['a'].recv(), b'aaa-test2x1twoway-aaa',
+                             'iteration {}'.format(i))
+            self.assertEqual(self.c['a'].recv(), b'twoway_aaa_2x1',
+                             'iteration {}'.format(i))
+            self.assertEqual(self.s['b'].recv(), b'bbb-test2x1twoway-bbb',
+                             'iteration {}'.format(i))
+            self.assertEqual(self.c['b'].recv(), b'twoway_bbb_2x1',
+                             'iteration {}'.format(i))
 
             self.c['a'].send(b'aaa-test2x1twoway-aaa')
             self.s['b'].send(b'twoway_bbb_2x1')
             self.s['a'].send(b'twoway_aaa_2x1')
             self.c['b'].send(b'bbb-test2x1twoway-bbb')
-            self.assertEqual(self.s['b'].recv(), b'bbb-test2x1twoway-bbb')
-            self.assertEqual(self.c['b'].recv(), b'twoway_bbb_2x1')
-            self.assertEqual(self.c['a'].recv(), b'twoway_aaa_2x1')
-            self.assertEqual(self.s['a'].recv(), b'aaa-test2x1twoway-aaa')
+            self.assertEqual(self.s['b'].recv(), b'bbb-test2x1twoway-bbb',
+                             'iteration {}'.format(i))
+            self.assertEqual(self.c['b'].recv(), b'twoway_bbb_2x1',
+                             'iteration {}'.format(i))
+            self.assertEqual(self.c['a'].recv(), b'twoway_aaa_2x1',
+                             'iteration {}'.format(i))
+            self.assertEqual(self.s['a'].recv(), b'aaa-test2x1twoway-aaa',
+                             'iteration {}'.format(i))
 
 class A6_Lossless_2x1_SameHost(A5_Lossless_2x1):
     CLIENTS = [('8.8.4.4', None), ('8.8.4.4', None)]
