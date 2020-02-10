@@ -110,9 +110,9 @@ class Socket:
         """
         Binds the socket to a local port
 
-        If the port is already in use by another socket, then this method
-        should raise a Socket.AddressInUse.  If this is a connected stream
-        socket, it should raise StreamSocket.AlreadyConnected.
+        If the port is already in use by another socket on this host, then the
+        method should raise Socket.AddressInUse.  If the socket is already
+        connected, it should raise StreamSocket.AlreadyConnected.
         """
         raise NotImplementedError
 
@@ -213,10 +213,10 @@ class StreamSocket(Socket):
     # Provided methods (you should not override these)
     def deliver(self, data):
         """
-        Appends the given data to the application-layer buffer
+        Passes message data (bytes) to the application layer
 
-        Subclasses should call this method whenever data is ready to be
-        delivered.
+        This data will be appended to a socket buffer where the application can
+        retrieve it later.
         """
 
         with self.datamut:
@@ -241,19 +241,21 @@ class StreamSocket(Socket):
     # Abstract methods, to be overridden in subclasses
     def connect(self, addr):
         """
-        Connects the stream socket to a remote socket address
+        Connects the socket to a remote socket address
 
         If the socket is not yet bound to a local port, the implementation
-        should choose an unused port for this socket's source address.
+        should choose an unused port for this socket's local address.
 
-        If the socket is already connected, the method should raise
-        StreamSocket.AlreadyConnected.
+        If the socket is already connected, this method should raise
+        StreamSocket.AlreadyConnected.  If the socket is listening, it should
+        raise StreamSocket.AlreadyListening.
         """
         raise NotImplementedError
 
     def listen(self):
         """
-        Configures the stream socket as a listening (server) socket
+        Identifies the stream socket as a listening (server) socket and begins
+        to listen for and queue incoming connections
 
         If the socket has not been bound to a local address on which to listen,
         this method should raise StreamSocket.NotBound.  If the socket is
@@ -263,10 +265,12 @@ class StreamSocket(Socket):
 
     def accept(self):
         """
-        Waits for and accepts an incoming connection
+        Accepts a single incoming connection, waiting for one if there are none
+        pending.
 
-        Returns a pair (socket, (addr, port)) giving the address of the client
-        and a socket that may be used to communicate with it.
+        Returns a pair (socket, (addr, port)) giving a socket that may be used
+        to communicate with the connecting client, and the remote socket
+        address.
 
         If this is called on a socket which is not listening, the method should
         raise StreamSocket.NotListening.
@@ -275,10 +279,11 @@ class StreamSocket(Socket):
 
     def send(self, msg):
         """
-        Send the provided message data to the remote host
+        Sends the provided message data to the remote host
 
-        This method should handle any socket-level sending behavior, such as
-        setting ARQ timers and updating sliding windows.
+        This method is called by the application to send message data (bytes)
+        over a connected socket.  It should handle any socket-level sending
+        behavior, such as setting ARQ timers.
 
         If the socket is not connected, this should raise
         StreamSocket.NotConnected.
@@ -314,18 +319,21 @@ class Protocol:
 
     def output(self, seg, dst):
         """
-        Hand the provided segment to the host's network layer for delivery to
-        this protocol on the destination host
+        Passes a segment (bytes) to the network layer for transmission to the
+        given destination host.
         """
         self.host.output(self.getid(), seg, dst)
 
     def input(self, seg, src):
         """
-        Called when a segment is received for this protocol from the given
-        source address
+        Handles an incoming segment
 
-        This method should handle any protocol-level receive behavior such as
+        This method is called by the network-layer thread when a segment is
+        received for this protocol, providing the segment data (bytes) and
+        network-layer address of the source host.
+
+        It should handle any protocol-level receive behavior such as
         demultiplexing and error detection, then pass the segment and source
-        address to the input() method on that socket.
+        address to the correct socket for handling.
         """
         raise NotImplementedError
