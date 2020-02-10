@@ -284,11 +284,6 @@ class A2_Lossless_SameHost(A1_Lossless_1x1):
     """Runs the Lossless 1x1 tests between two sockets on a single host"""
     CLIENTS = [('92.68.10.1', None), ('92.68.10.1', None)]
 
-def _serversock(sock, port):
-    sock.bind(port)
-    sock.listen()
-    return sock
-
 class A3_Lossless_1x2(BaseNetworkTest):
     CLIENTS = [('172.16.170.22', None), ('172.16.170.22', None)]
     LISTEN = [('172.16.170.111', 20956), ('172.16.170.3', 1255)]
