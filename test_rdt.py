@@ -367,6 +367,11 @@ class A6_Lossless_2x1_SameHost(A5_Lossless_2x1):
     CLIENTS = [('8.8.4.4', None), ('8.8.4.4', None)]
     LISTEN = [('8.8.4.4', 20063)]
 
+class A7_Lossless_ManyConns(BaseNetworkTest):
+    CLIENTS = [('192.168.40.253', None) for i in range(1000)]
+    LISTEN = [('192.168.40.253', 48000 + i) for i in range(10)]
+    CONNS = {'{}->{}'.format(i, i % 10): (i, i % 10) for i in range(1000)}
+
 class B1_Corrupt02_1x1(A1_Lossless_1x1):
     PER = 0.02
 class B2_Corrupt02_SameHost(A2_Lossless_SameHost):
@@ -378,6 +383,8 @@ class B4_Corrupt02_1x2_SameHost(A4_Lossless_1x2_SameHost):
 class B5_Corrupt02_2x1(A5_Lossless_2x1):
     PER = 0.02
 class B6_Corrupt02_2x1_SameHost(A6_Lossless_2x1_SameHost):
+    PER = 0.02
+class B7_Corrupt02_ManyConns(A7_Lossless_ManyConns):
     PER = 0.02
 
 class C1_Corrupt05_1x1(A1_Lossless_1x1):
@@ -392,6 +399,8 @@ class C5_Corrupt05_2x1(A5_Lossless_2x1):
     PER = 0.05
 class C6_Corrupt05_2x1_SameHost(A6_Lossless_2x1_SameHost):
     PER = 0.05
+class C7_Corrupt05_ManyConns(A7_Lossless_ManyConns):
+    PER = 0.05
 
 class D1_Corrupt10_1x1(A1_Lossless_1x1):
     PER = 0.10
@@ -405,62 +414,73 @@ class D5_Corrupt10_2x1(A5_Lossless_2x1):
     PER = 0.10
 class D6_Corrupt10_2x1_SameHost(A6_Lossless_2x1_SameHost):
     PER = 0.10
+class D7_Corrupt10_ManyConns(A7_Lossless_ManyConns):
+    PER = 0.10
 
-class D1_Lose02_1x1(A1_Lossless_1x1):
+class E1_Lose02_1x1(A1_Lossless_1x1):
     LOSS = 0.02
-class D2_Lose02_SameHost(A2_Lossless_SameHost):
+class E2_Lose02_SameHost(A2_Lossless_SameHost):
     LOSS = 0.02
-class D3_Lose02_1x2(A3_Lossless_1x2):
+class E3_Lose02_1x2(A3_Lossless_1x2):
     LOSS = 0.02
-class D4_Lose02_1x2_SameHost(A4_Lossless_1x2_SameHost):
+class E4_Lose02_1x2_SameHost(A4_Lossless_1x2_SameHost):
     LOSS = 0.02
-class D5_Lose02_2x1(A5_Lossless_2x1):
+class E5_Lose02_2x1(A5_Lossless_2x1):
     LOSS = 0.02
-class D6_Lose02_2x1_SameHost(A6_Lossless_2x1_SameHost):
+class E6_Lose02_2x1_SameHost(A6_Lossless_2x1_SameHost):
+    LOSS = 0.02
+class E7_Lose02_ManyConns(A7_Lossless_ManyConns):
     LOSS = 0.02
 
-class E1_Lose05_1x1(A1_Lossless_1x1):
+class F1_Lose05_1x1(A1_Lossless_1x1):
     LOSS = 0.05
-class E2_Lose05_SameHost(A2_Lossless_SameHost):
+class F2_Lose05_SameHost(A2_Lossless_SameHost):
     LOSS = 0.05
-class E3_Lose05_1x2(A3_Lossless_1x2):
+class F3_Lose05_1x2(A3_Lossless_1x2):
     LOSS = 0.05
-class E4_Lose05_1x2_SameHost(A4_Lossless_1x2_SameHost):
+class F4_Lose05_1x2_SameHost(A4_Lossless_1x2_SameHost):
     LOSS = 0.05
-class E5_Lose05_2x1(A5_Lossless_2x1):
+class F5_Lose05_2x1(A5_Lossless_2x1):
     LOSS = 0.05
-class E6_Lose05_2x1_SameHost(A6_Lossless_2x1_SameHost):
+class F6_Lose05_2x1_SameHost(A6_Lossless_2x1_SameHost):
+    LOSS = 0.05
+class F7_Lose05_ManyConns(A7_Lossless_ManyConns):
     LOSS = 0.05
 
-class F1_Lose10_1x1(A1_Lossless_1x1):
+class G1_Lose10_1x1(A1_Lossless_1x1):
     LOSS = 0.10
-class F2_Lose10_SameHost(A2_Lossless_SameHost):
+class G2_Lose10_SameHost(A2_Lossless_SameHost):
     LOSS = 0.10
-class F3_Lose10_1x2(A3_Lossless_1x2):
+class G3_Lose10_1x2(A3_Lossless_1x2):
     LOSS = 0.10
-class F4_Lose10_1x2_SameHost(A4_Lossless_1x2_SameHost):
+class G4_Lose10_1x2_SameHost(A4_Lossless_1x2_SameHost):
     LOSS = 0.10
-class F5_Lose10_2x1(A5_Lossless_2x1):
+class G5_Lose10_2x1(A5_Lossless_2x1):
     LOSS = 0.10
-class F6_Lose10_2x1_SameHost(A6_Lossless_2x1_SameHost):
+class G6_Lose10_2x1_SameHost(A6_Lossless_2x1_SameHost):
+    LOSS = 0.10
+class G7_Lose10_ManyConns(A7_Lossless_ManyConns):
     LOSS = 0.10
 
-class G1_Corrupt10Lose10_1x1(A1_Lossless_1x1):
+class H1_Corrupt10Lose10_1x1(A1_Lossless_1x1):
     LOSS = 0.10
     PER = 0.10
-class G2_Corrupt10Lose10_SameHost(A2_Lossless_SameHost):
+class H2_Corrupt10Lose10_SameHost(A2_Lossless_SameHost):
     LOSS = 0.10
     PER = 0.10
-class G3_Corrupt10Lose10_1x2(A3_Lossless_1x2):
+class H3_Corrupt10Lose10_1x2(A3_Lossless_1x2):
     LOSS = 0.10
     PER = 0.10
-class G4_Corrupt10Lose10_1x2_SameHost(A4_Lossless_1x2_SameHost):
+class H4_Corrupt10Lose10_1x2_SameHost(A4_Lossless_1x2_SameHost):
     LOSS = 0.10
     PER = 0.10
-class G5_Corrupt10Lose10_2x1(A5_Lossless_2x1):
+class H5_Corrupt10Lose10_2x1(A5_Lossless_2x1):
     LOSS = 0.10
     PER = 0.10
-class G6_Corrupt10Lose10_2x1_SameHost(A6_Lossless_2x1_SameHost):
+class H6_Corrupt10Lose10_2x1_SameHost(A6_Lossless_2x1_SameHost):
+    LOSS = 0.10
+    PER = 0.10
+class H7_Corrupt10Lose10_ManyConns(A7_Lossless_ManyConns):
     LOSS = 0.10
     PER = 0.10
 
