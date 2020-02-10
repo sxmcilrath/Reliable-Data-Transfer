@@ -89,70 +89,74 @@ class BaseNetworkTest(unittest.TestCase):
         self.c = {}
         self.makeconns(conns)
 
+    def test_00_connect(self):
+        """Connection setup is successful"""
+        pass
+
 class A0_ErrorChecking(BaseNetworkTest):
     CLIENTS = [('10.50.254.1', None), ('10.50.254.1', None),
                ('10.50.254.2', None), ('10.50.254.2', None)]
     LISTEN = [('10.50.254.2', 3324), ('10.50.254.2', 26232)]
     CONNS = {'a': (0, None), 'b': (1, None), 'c': (2, None), 'd': (3, None), 'l': (None, 0)}
 
-    def test_00_bind_namespace(self):
+    def test_01_bind_namespace(self):
         """Different hosts can bind the same port number"""
         self.c['a'].bind(42533)
         self.c['c'].bind(42533)
 
-    def test_01_bindinuse(self):
+    def test_02_bindinuse(self):
         """Bind can raise AddressInUse"""
         self.c['a'].bind(29539)
         with self.assertRaises(Socket.AddressInUse):
             self.c['b'].bind(29539)
 
-    def test_02_bindinuse_listen(self):
+    def test_03_bindinuse_listen(self):
         """Bind can raise AddressInUse for listening socket"""
         with self.assertRaises(Socket.AddressInUse):
             self.c['d'].bind(type(self).LISTEN[0][1])
 
-    def test_03_bindafteraccept(self):
+    def test_04_bindafteraccept(self):
         """Bind cannot be called after accept"""
         self.makeconns({'x': (0, 0)})
         with self.assertRaises(StreamSocket.AlreadyConnected):
             self.s['x'].bind(23583)
 
-    def test_04_bindafterconnect(self):
+    def test_05_bindafterconnect(self):
         """Bind cannot be called after connect"""
         self.makeconns({'x': (0, 0)})
         with self.assertRaises(StreamSocket.AlreadyConnected):
             self.c['x'].bind(29691)
 
-    def test_05_listenafterconnect(self):
+    def test_06_listenafterconnect(self):
         """Listen cannot be called after connect"""
         self.makeconns({'x': (0, 0)})
         with self.assertRaises(StreamSocket.AlreadyConnected):
             self.c['x'].listen()
 
-    def test_06_2connect(self):
+    def test_07_2connect(self):
         """Connect cannot be called twice on a socket"""
         self.makeconns({'x': (0, 0)})
         with self.assertRaises(StreamSocket.AlreadyConnected):
             self.c['x'].connect(type(self).LISTEN[1])
 
-    def test_07_notbound(self):
+    def test_08_notbound(self):
         """Bind must be called before listen"""
         with self.assertRaises(StreamSocket.NotBound):
             self.c['d'].listen()
 
-    def test_08_notlistening(self):
+    def test_09_notlistening(self):
         """Listen must be called before accept"""
         self.c['c'].bind(13579)
         with self.assertRaises(StreamSocket.NotListening):
             self.c['c'].accept()
 
-    def test_09_notconnected(self):
+    def test_10_notconnected(self):
         """Socket must be connected to send"""
         self.c['c'].bind(9532)
         with self.assertRaises(StreamSocket.NotConnected):
             self.c['c'].send(b'test-notconnected')
 
-    def test_10_connectafterlisten(self):
+    def test_11_connectafterlisten(self):
         """Connect cannot be called after listen"""
         with self.assertRaises(StreamSocket.AlreadyListening):
             self.l['l'].connect(type(self).LISTEN[1])
@@ -166,7 +170,7 @@ class A1_Lossless_1x1(BaseNetworkTest):
         self.c['a'].bind(32901)
         self.c['a'].connect((type(self).CLIENTS[1][0], 9920))
 
-    def test_00_bindsrc(self):
+    def test_01_bindsrc(self):
         """Binding a client socket sets the source address"""
 
         self.c['b'].bind(9920)
@@ -176,7 +180,7 @@ class A1_Lossless_1x1(BaseNetworkTest):
             self.assertEqual(host, type(self).CLIENTS[0][0])
             self.assertEqual(port, 32901)
 
-    def test_01_oneway(self):
+    def test_02_oneway(self):
         """Data can be sent in one direction"""
         self.makeconns({'c': (0, 1)})
         for i in range(100):
@@ -184,7 +188,7 @@ class A1_Lossless_1x1(BaseNetworkTest):
             self.c['c'].send(data)
             self.assertEqual(self.s['c'].recv(), data)
 
-    def test_02_otherway(self):
+    def test_03_otherway(self):
         """Data can be sent in the other direction"""
         self.makeconns({'c': (1, 0)})
         for i in range(100):
@@ -192,7 +196,7 @@ class A1_Lossless_1x1(BaseNetworkTest):
             self.c['c'].send(data)
             self.assertEqual(self.s['c'].recv(), data)
 
-    def test_03_oneway_pcs(self):
+    def test_04_oneway_pcs(self):
         """Multiple pieces of data are made into one stream"""
         self.makeconns({'c': (0, 1)})
         for i in range(100):
@@ -203,7 +207,7 @@ class A1_Lossless_1x1(BaseNetworkTest):
             self.assertEqual(self.s['c'].recv(),
                              b'test-oneway-pcs' + str(i).encode())
 
-    def test_04_twoway(self):
+    def test_05_twoway(self):
         """Data can be sent both directions over a connected socket"""
         self.makeconns({'c': (0, 1)})
         for i in range(100):
@@ -214,7 +218,7 @@ class A1_Lossless_1x1(BaseNetworkTest):
             self.s['c'].send(data2)
             self.assertEqual(self.c['c'].recv(), data2)
 
-    def test_05_binary(self):
+    def test_06_binary(self):
         """Binary data can be sent"""
         data = base64.b64decode(
                 b'AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKi' +
@@ -259,7 +263,7 @@ class A1_Lossless_1x1(BaseNetworkTest):
                              'in chunk starting with byte {}'.format(count))
             count += b
 
-    def test_06_stress(self):
+    def test_07_stress(self):
         """A lot of data can be sent and received"""
         self.makeconns({'c': (0, 1)})
         # Send 1 MB in random sizes of up to 1400 B
@@ -290,7 +294,7 @@ class A3_Lossless_1x2(BaseNetworkTest):
     LISTEN = [('172.16.170.111', 20956), ('172.16.170.3', 1255)]
     CONNS = {'a': (0, 0), 'b': (1, 1)}
 
-    def test_00_mux(self):
+    def test_01_mux(self):
         """Multiple client sockets can coexist on a host"""
         for i in range(100):
             self.c['a'].send(b'2test-')
@@ -319,7 +323,7 @@ class A5_Lossless_2x1(BaseNetworkTest):
     LISTEN = [('172.16.22.3', 20063)]
     CONNS = {'a': (0, 0), 'b': (1, 0)}
 
-    def test_00_oneway(self):
+    def test_01_oneway(self):
         """Server can distinguish data from different clients"""
         for i in range(100):
             self.c['a'].send(b'aaa-test2x1oneway-aaa')
@@ -335,7 +339,7 @@ class A5_Lossless_2x1(BaseNetworkTest):
             self.assertEqual(self.s['a'].recv(), b'AAA-TEST2X1ONEWAY-AAA',
                              'iteration {}'.format(i))
 
-    def test_01_twoway(self):
+    def test_02_twoway(self):
         """Server can reply to different clients"""
         for i in range(100):
             self.c['a'].send(b'aaa-test2x1twoway-aaa')
