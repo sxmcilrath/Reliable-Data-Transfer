@@ -127,7 +127,8 @@ class A2_ErrorNetworkTest(unittest.TestCase):
         data = 'test-{}pct-errors'.format(pct).encode()
         for i in range(10000):
             n.tx(7, data, '192.168.22.22', '192.168.11.11')
-            if self.mh.input.call_args.args[1] != data:
+            args, kwargs = self.mh.input.call_args
+            if args[1] != data:
                 corrupt += 1
         self.assertEqual(self.mh.input.call_count, 10000)
         self.assertGreaterEqual(corrupt, 80 * pct, 'significantly < {}% corruption'.format(pct))
