@@ -6,6 +6,7 @@ import random
 import itertools
 import base64
 import sys
+import time
 import os.path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(sys.argv[0])))
@@ -161,23 +162,29 @@ class A0_ErrorChecking(BaseNetworkTest):
         with self.assertRaises(StreamSocket.AlreadyListening):
             self.l['l'].connect(type(self).LISTEN[1])
 
+    def do_connect(self, sock, addr):
+        time.sleep(0.1)
+        sock.connect(addr)
+
     def test_12_queueconns(self):
         """Multiple connections are queued at a listening socket"""
         self.c['a'].bind(2828)
         self.c['b'].bind(4646)
         self.c['c'].bind(8383)
-        self.c['a'].connect(type(self).LISTEN[0])
-        self.c['b'].connect(type(self).LISTEN[0])
-        self.c['c'].connect(type(self).LISTEN[0])
-        cs, (host, port) = self.l['l'].accept()
-        self.assertEqual(host, type(self).CLIENTS[0][0])
-        self.assertEqual(port, 2828)
-        cs, (host, port) = self.l['l'].accept()
-        self.assertEqual(host, type(self).CLIENTS[1][0])
-        self.assertEqual(port, 4646)
-        cs, (host, port) = self.l['l'].accept()
-        self.assertEqual(host, type(self).CLIENTS[2][0])
-        self.assertEqual(port, 8383)
+        tick = threading.Semaphore(value=0)
+        with ExThread(target=self.do_connect, args=(self.c['a'], type(self).LISTEN[0])):
+            with ExThread(target=self.do_connect, args=(self.c['b'], type(self).LISTEN[0])):
+                with ExThread(target=self.do_connect, args=(self.c['c'], type(self).LISTEN[0])):
+                    time.sleep(0.5)
+                    cs, (host, port) = self.l['l'].accept()
+                    self.assertEqual(host, type(self).CLIENTS[0][0])
+                    self.assertEqual(port, 2828)
+                    cs, (host, port) = self.l['l'].accept()
+                    self.assertEqual(host, type(self).CLIENTS[1][0])
+                    self.assertEqual(port, 4646)
+                    cs, (host, port) = self.l['l'].accept()
+                    self.assertEqual(host, type(self).CLIENTS[2][0])
+                    self.assertEqual(port, 8383)
 
 class A1_Lossless_1x1(BaseNetworkTest):
     CLIENTS = [('192.168.10.1', None), ('192.168.10.2', None)]
