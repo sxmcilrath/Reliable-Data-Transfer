@@ -162,20 +162,18 @@ class A0_ErrorChecking(BaseNetworkTest):
         with self.assertRaises(StreamSocket.AlreadyListening):
             self.l['l'].connect(type(self).LISTEN[1])
 
-    def do_connect(self, sock, addr):
-        sock.connect(addr)
-
     def test_12_queueconns(self):
         """Multiple connections are queued at a listening socket"""
         self.c['a'].bind(2828)
         self.c['b'].bind(4646)
         self.c['c'].bind(8383)
-        tick = threading.Semaphore(value=0)
-        with ExThread(target=self.do_connect, args=(self.c['a'], type(self).LISTEN[0])):
+        # "sleep" is not a valid synchronization technique... but in this case
+        # there's no choice, since we'd need to signal inside connect
+        with ExThread(target=self.c['a'].connect, args=(type(self).LISTEN[0],)):
             time.sleep(0.1)
-            with ExThread(target=self.do_connect, args=(self.c['b'], type(self).LISTEN[0])):
+            with ExThread(target=self.c['b'].connect, args=(type(self).LISTEN[0],)):
                 time.sleep(0.1)
-                with ExThread(target=self.do_connect, args=(self.c['c'], type(self).LISTEN[0])):
+                with ExThread(target=self.c['c'].connect, args=(type(self).LISTEN[0],)):
                     time.sleep(0.2)
                     cs, (host, port) = self.l['l'].accept()
                     self.assertEqual(host, type(self).CLIENTS[0][0])
