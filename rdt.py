@@ -46,7 +46,7 @@ class RDTSocket(StreamSocket):
         #set fields and bind
         self.port = port
         self.is_bound = True
-        self.proto.bound_ports[port] = self.event
+        self.proto.bound_ports[port] = self
         StreamSocket.bind(port)
 
         #unlock
@@ -89,7 +89,13 @@ class RDTSocket(StreamSocket):
 
         #handle port not bound
         if(self.port == None):
-            pass
+            #ephem range - 49152 to 65535
+            rand_port = random.randint(49152, 65535)
+            while(self.proto.bound_ports[rand_port] != None):
+                rand_port = random.randint(49152, 65535)
+            self.proto.bound_ports[rand_port] = self
+
+
         #port alr bound
         else:
             #assemble SYN segment
@@ -102,35 +108,41 @@ class RDTSocket(StreamSocket):
             #keep sending SYN until SYNACK is recieved
             segment = None
             while(segment == None):
-                StreamSocket.send(syn_seg)
-                segment = self.q.get(timeout=1) #TODO = change to proper timeout
+                StreamSocket.output(syn_seg, addr)
+
+                #wait for SYNACK
+                try:
+                    segment = self.q.get(timeout=1) #TODO = change to proper timeout
+                except queue.Empty: 
+                    segment = None
+                    continue
                 
                 #verify no bits flipped
                 err = verify_checksum(segment)
                 if(err):
-                    segment == None
+                    segment = None
                 
                 #verify ack 
-                _, _, _, ack_num, _, _= struct.unpack('!HHIIBH', segment)
-                if(ack_num != self.seq_num + 1):
-                    segment == None
+                _, _, seq_num, ack_num, flags, _= struct.unpack('!HHIIBH', segment)
+
+                syn_flag = (flags >> 1) & 1
+                if((ack_num != self.seq_num + 1) or (syn_flag != 1)):
+                    segment = None
                 
-            
 
             #assemble ACK segment
             self.syn_flag = 0
             self.ack_flag = 1
+            self.ack_num = seq_num + 1
             
             flags = bytes([self.ack_flag | self.syn_flag << 1 | self.fin_flag << 2])
-            precheck = bytearray([self.port, self.rport, self.seq_num, self.ack_num, flags]) #no data in control msg
+            precheck = struct.pack('!HHIIB', self.port, self.rport, self.seq_num, self.ack_num, flags)
             checksum = get_checksum(precheck)
-            ack_seg = bytearray([precheck, checksum])
+            ack_seg = struct.pack('!HHIIBH', self.port, self.rport, self.seq_num, self.ack_num, flags, checksum)
 
-            #keep sending until proper ACK retrieved 
-            segment = None
-            while(segment == None):
-                StreamSocket.send(ack_seg)
-                segment  = self.q.get(timeout=1) #TODO = change to proper timeout 
+            #send ACK and mark connected
+            StreamSocket.output(ack_seg, addr)
+            self.is_connected = True
 
         
 
