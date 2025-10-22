@@ -1,5 +1,7 @@
 from network import Protocol, StreamSocket
 import threading
+import queue
+import struct
 import sys
 import os
 import random
@@ -18,13 +20,16 @@ class RDTSocket(StreamSocket):
         self.is_bound = False
         self.is_listening = False
 
-        #segment vars
+        #segment vars/flags
         self.seq_num = 0
         self.ack_num = 0
+        self.syn_flag = 0
+        self.ack_flag = 0
+        self.fin_flag = 0
 
         self.port = None
         self.lock = threading.Lock()
-        self.event = threading.Event()
+        self.q = queue.Queue()
 
     def bind(self, port):
 
@@ -41,7 +46,7 @@ class RDTSocket(StreamSocket):
         #set fields and bind
         self.port = port
         self.is_bound = True
-        self.proto.bound_ports[port] = True
+        self.proto.bound_ports[port] = self.event
         StreamSocket.bind(port)
 
         #unlock
@@ -87,19 +92,46 @@ class RDTSocket(StreamSocket):
             pass
         #port alr bound
         else:
-            #assemble SYN packet
+            #assemble SYN segment
             flags = bytes([self.ack_flag | self.syn_flag << 1 | self.fin_flag << 2])
-            precheck: int = bytearray([self.port, self.rport, self.seq_num, self.ack_num, flags]) #no data in control msg
-            checksum = getChecksum(precheck)
-            syn_seg = bytearray([precheck, checksum])
-
-            recieved = False
-            while(not recieved):
+            #precheck: int = bytearray([self.port, self.rport, self.seq_num, self.ack_num, flags]) #no data in control msg
+            precheck = struct.pack('!HHIIB', self.port, self.rport, self.seq_num, self.ack_num, flags)
+            checksum = get_checksum(precheck)
+            syn_seg = struct.pack('!HHIIBH', self.port, self.rport, self.seq_num, self.ack_num, flags, checksum)
+ 
+            #keep sending SYN until SYNACK is recieved
+            segment = None
+            while(segment == None):
                 StreamSocket.send(syn_seg)
-                recieved = self.event.wait(timeout=1) #TODO = change to proper timeout 
-                  
+                segment = self.q.get(timeout=1) #TODO = change to proper timeout
+                
+                #verify no bits flipped
+                err = verify_checksum(segment)
+                if(err):
+                    segment == None
+                
+                #verify ack 
+                _, _, _, ack_num, _, _= struct.unpack('!HHIIBH', segment)
+                if(ack_num != self.seq_num + 1):
+                    segment == None
+                
+            
 
-            StreamSocket.connect(addr)
+            #assemble ACK segment
+            self.syn_flag = 0
+            self.ack_flag = 1
+            
+            flags = bytes([self.ack_flag | self.syn_flag << 1 | self.fin_flag << 2])
+            precheck = bytearray([self.port, self.rport, self.seq_num, self.ack_num, flags]) #no data in control msg
+            checksum = get_checksum(precheck)
+            ack_seg = bytearray([precheck, checksum])
+
+            #keep sending until proper ACK retrieved 
+            segment = None
+            while(segment == None):
+                StreamSocket.send(ack_seg)
+                segment  = self.q.get(timeout=1) #TODO = change to proper timeout 
+
         
 
     def send(self, data):
@@ -118,21 +150,8 @@ class RDTSocket(StreamSocket):
             raise StreamSocket.NotConnected
         
 
-        #assemble segment pre check
-
         flags = bytes([self.ack_flag | self.syn_flag << 1 | self.fin_flag << 2])
         precheck: int = bytearray([self.port, self.rport, self.seq_num, self.ack_num, flags, data])
-
-        #perform checksum
-        ##I need to divide into 16 bit segments and then add them 
-        ##shift bytes by 16 and & with 0xFF
-        total = bin(0)
-        for i in range(0, len(precheck) * 8, 16): #want to range over the number of bits
-            word = (precheck >> i) & 0xFFFF 
-            total += word
-            total = (total & 0xFFFF) + (total >> 16) #add the overflow
-        #add overflow
-        checksum = ~checksum & 0xFFFF #take complement and ensure only 16 bits
 
         #send
         StreamSocket.send(bytearray([precheck, checksum]))
@@ -147,7 +166,7 @@ class RDTProtocol(Protocol):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Other initialization here
-        self.bound_ports = {} #bool dictionary if ports are being used
+        self.bound_ports = {} #bool dictionary if ports are being used port # -> threading.Event
         self.lock = threading.Lock()
 
     def input(self, seg, rhost):
