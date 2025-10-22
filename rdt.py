@@ -24,6 +24,7 @@ class RDTSocket(StreamSocket):
 
         self.port = None
         self.lock = threading.Lock()
+        self.event = threading.Event()
 
     def bind(self, port):
 
@@ -58,6 +59,7 @@ class RDTSocket(StreamSocket):
             raise StreamSocket.AlreadyConnected
         
         StreamSocket.listen()
+        self.is_listening = True
 
         self.lock.release()
 
@@ -77,13 +79,26 @@ class RDTSocket(StreamSocket):
         
         #reset instance vars
         self.seq_num = 0
-        self.ack_num = 0
+        self.ack_num = 0 #TODO - should change this to be rand later
+        self.syn_flag = 1
 
         #handle port not bound
         if(self.port == None):
             pass
         #port alr bound
         else:
+            #assemble SYN packet
+            flags = bytes([self.ack_flag | self.syn_flag << 1 | self.fin_flag << 2])
+            precheck: int = bytearray([self.port, self.rport, self.seq_num, self.ack_num, flags]) #no data in control msg
+            checksum = getChecksum(precheck)
+            syn_seg = bytearray([precheck, checksum])
+
+            recieved = False
+            while(not recieved):
+                StreamSocket.send(syn_seg)
+                recieved = self.event.wait(timeout=1) #TODO = change to proper timeout 
+                  
+
             StreamSocket.connect(addr)
         
 
@@ -120,7 +135,7 @@ class RDTSocket(StreamSocket):
         checksum = ~checksum & 0xFFFF #take complement and ensure only 16 bits
 
         #send
-        StreamSocket.send(bytearray([checksum, precheck]))
+        StreamSocket.send(bytearray([precheck, checksum]))
         pass
 
 
