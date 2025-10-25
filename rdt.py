@@ -68,11 +68,15 @@ class RDTSocket(StreamSocket):
         self.lock.release()
 
     def accept(self):
+
         if(not self.is_listening):
             raise StreamSocket.NotListening
         
+        #I need a socket, address, port 
+
+
         conn_sock, conn_addr = StreamSocket.accept()
-        return conn_sock, conn_addr
+        return self, (addr, self.port)
 
     def connect(self, addr):
         #exceptions
@@ -178,7 +182,35 @@ class RDTProtocol(Protocol):
         super().__init__(*args, **kwargs)
         # Other initialization here
         self.bound_ports = {} #bool dictionary if ports are being used port # -> threading.Event
+        self.connecting_sockets = {} #dict stores sockets waiting for S SA A handshake ACK (remip, remport, sport) -> socket
         self.lock = threading.Lock()
+        
+    def input(self, seg: struct, rhost):
 
-    def input(self, seg, rhost):
+        ##handle the SYN case 
+        rport, dport, seq_num, ack_num, flags, checksum, data = seg.unpack('!HHIIBH')
+
+        if((flags >> 1 & 1) == 1): ##SYN flag set 
+            #check if specified port is listening 
+            dest_sock: RDTSocket = self.bound_ports.get(seg[2:4])
+
+            #raise exception if port isn't bound or isn't listening 
+            if(dest_sock == None):
+                print(f"RDT Input: port {seg[2:4]} is not bound")
+                raise Exception
+            if(not dest_sock.is_listening):
+                raise StreamSocket.NotListening
+            
+            #create new socket for conn
+            new_sock: RDTSocket = self.socket()
+            new_sock.bind(random.randint(49152, 65535))
+            self.connecting_sockets[(rhost, rport, dport)] = new_sock
+
+            #send SYN ACK
+            pre_check = struct.pack('!HHIIB', new_sock.port, rport, random.randint(0,10000), seq_num + 1)
+            checksum = get_checksum(pre_check)
+            ack_seg = struct.pack('!HHIIBH', new_sock.port, rport, random.randint(0,10000), seq_num + 1, checksum)
+            
+            new_sock.output(ack_seg, (rhost, rport))
+
         pass
