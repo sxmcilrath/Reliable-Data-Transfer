@@ -32,12 +32,12 @@ class RDTSocket(StreamSocket):
         self.q = queue.Queue()
 
     def bind(self, port):
-
+        #print(f"bind: attempting to bind {port}.")
         #lock
         self.proto.lock.acquire()
 
         #if in use by another system
-        if(self.proto.bound_ports[port]):
+        if(self.proto.bound_ports.get(port) != None):
             raise StreamSocket.AddressInUse
         #check if alr connected
         if(self.is_connected):
@@ -47,8 +47,8 @@ class RDTSocket(StreamSocket):
         self.port = port
         self.is_bound = True
         self.proto.bound_ports[port] = self
-        StreamSocket.bind(port)
-
+        
+        #print(f"bind: successfully bound {port}.")
         #unlock
         self.proto.lock.release()
 
@@ -63,7 +63,6 @@ class RDTSocket(StreamSocket):
         if(self.is_connected):
             raise StreamSocket.AlreadyConnected
         
-        StreamSocket.listen()
         self.is_listening = True
 
         self.lock.release()
