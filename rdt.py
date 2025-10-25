@@ -20,6 +20,9 @@ class RDTSocket(StreamSocket):
         self.is_bound = False
         self.is_listening = False
 
+        #TODO - refactor from booleans to state
+        self.state = 'CLOSED' # Can be CLOSED, CONNECTING, CONNECTED, LISTENING
+
         #segment vars/flags
         self.seq_num = 0
         self.ack_num = 0
@@ -28,8 +31,11 @@ class RDTSocket(StreamSocket):
         self.fin_flag = 0
 
         self.port = None
+        self.remote_addr = None
+        self.parent = None
         self.lock = threading.Lock()
-        self.q = queue.Queue()
+        self.q = queue.Queue() #TODO - change to seg_q
+        self.conn_q = queue.Queue() #stores (socket, addr, port) items 
 
     def bind(self, port):
         #print(f"bind: attempting to bind {port}.")
@@ -72,11 +78,8 @@ class RDTSocket(StreamSocket):
         if(not self.is_listening):
             raise StreamSocket.NotListening
         
-        #I need a socket, address, port 
-
-
-        conn_sock, conn_addr = StreamSocket.accept()
-        return self, (addr, self.port)
+        new_sock, rhost, rport = self.conn_q.get() #check connection q for new conns
+        return (new_sock, (rhost, rport)) 
 
     def connect(self, addr):
         #exceptions
@@ -210,7 +213,17 @@ class RDTProtocol(Protocol):
             pre_check = struct.pack('!HHIIB', new_sock.port, rport, random.randint(0,10000), seq_num + 1)
             checksum = get_checksum(pre_check)
             ack_seg = struct.pack('!HHIIBH', new_sock.port, rport, random.randint(0,10000), seq_num + 1, checksum)
-            
+
             new_sock.output(ack_seg, (rhost, rport))
+        
+        
+        #behavior for handshake ACK recieved
+        conn_sock: RDTSocket = self.connecting_sockets.get((rhost, rport, dport))
+
+        if((flags & 1 == 1) and conn_sock != None): # ACK flag set and matching connection in progress
+            #need to place connection in the parents queue 
+            conn_sock.state = 'CONNECTED' #set child socket status
+            parent_sock: RDTSocket = self.bound_ports[conn_sock.parent]
+            parent_sock.conn_q.put((conn_sock, rhost, rport))
 
         pass
