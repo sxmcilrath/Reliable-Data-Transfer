@@ -70,16 +70,19 @@ class RDTSocket(StreamSocket):
             raise StreamSocket.AlreadyConnected
         
         self.is_listening = True
+        self.state = 'LISTENING'
 
         self.lock.release()
 
     def accept(self):
 
+        print('accept: arrived')
         if(not self.is_listening):
             raise StreamSocket.NotListening
         
-        new_sock, rhost, rport = self.conn_q.get() #check connection q for new conns
-        return (new_sock, (rhost, rport)) 
+        #new_sock, rhost, rport = self.conn_q.get(5) #check connection q for new conns
+        #return (new_sock, (rhost, rport)) 
+        return (0, (0,0))
 
     def connect(self, addr):
         #exceptions
@@ -97,58 +100,55 @@ class RDTSocket(StreamSocket):
         if(self.port == None):
             #ephem range - 49152 to 65535
             rand_port = random.randint(49152, 65535)
-            while(self.proto.bound_ports[rand_port] != None):
+            while(self.proto.bound_ports.get(rand_port) != None):
                 rand_port = random.randint(49152, 65535)
             self.proto.bound_ports[rand_port] = self
+        
+        #assemble SYN segment
+        flags = bytes([self.ack_flag | self.syn_flag << 1 | self.fin_flag << 2])
+        #precheck: int = bytearray([self.port, self.rport, self.seq_num, self.ack_num, flags]) #no data in control msg
+        precheck = struct.pack('!HHIIB', self.port, self.rport, self.seq_num, self.ack_num, flags)
+        checksum = get_checksum(precheck)
+        syn_seg = struct.pack('!HHIIBH', self.port, self.rport, self.seq_num, self.ack_num, flags, checksum)
 
+        #keep sending SYN until SYNACK is recieved
+        segment = None
+        while(segment == None):
+            StreamSocket.output(syn_seg, addr)
 
-        #port alr bound
-        else:
-            #assemble SYN segment
-            flags = bytes([self.ack_flag | self.syn_flag << 1 | self.fin_flag << 2])
-            #precheck: int = bytearray([self.port, self.rport, self.seq_num, self.ack_num, flags]) #no data in control msg
-            precheck = struct.pack('!HHIIB', self.port, self.rport, self.seq_num, self.ack_num, flags)
-            checksum = get_checksum(precheck)
-            syn_seg = struct.pack('!HHIIBH', self.port, self.rport, self.seq_num, self.ack_num, flags, checksum)
- 
-            #keep sending SYN until SYNACK is recieved
-            segment = None
-            while(segment == None):
-                StreamSocket.output(syn_seg, addr)
-
-                #wait for SYNACK
-                try:
-                    segment = self.q.get(timeout=1) #TODO = change to proper timeout
-                except queue.Empty: 
-                    segment = None
-                    continue
-                
-                #verify no bits flipped
-                err = verify_checksum(segment)
-                if(err):
-                    segment = None
-                
-                #verify ack 
-                _, _, seq_num, ack_num, flags, _= struct.unpack('!HHIIBH', segment)
-
-                syn_flag = (flags >> 1) & 1
-                if((ack_num != self.seq_num + 1) or (syn_flag != 1)):
-                    segment = None
-                
-
-            #assemble ACK segment
-            self.syn_flag = 0
-            self.ack_flag = 1
-            self.ack_num = seq_num + 1
+            #wait for SYNACK
+            try:
+                segment = self.q.get(timeout=1) #TODO = change to proper timeout
+            except queue.Empty: 
+                segment = None
+                continue
             
-            flags = bytes([self.ack_flag | self.syn_flag << 1 | self.fin_flag << 2])
-            precheck = struct.pack('!HHIIB', self.port, self.rport, self.seq_num, self.ack_num, flags)
-            checksum = get_checksum(precheck)
-            ack_seg = struct.pack('!HHIIBH', self.port, self.rport, self.seq_num, self.ack_num, flags, checksum)
+            #verify no bits flipped
+            err = verify_checksum(segment)
+            if(err):
+                segment = None
+            
+            #verify ack 
+            _, _, seq_num, ack_num, flags, _= struct.unpack('!HHIIBH', segment)
 
-            #send ACK and mark connected
-            StreamSocket.output(ack_seg, addr)
-            self.is_connected = True
+            syn_flag = (flags >> 1) & 1
+            if((ack_num != self.seq_num + 1) or (syn_flag != 1)):
+                segment = None
+            
+
+        #assemble ACK segment
+        self.syn_flag = 0
+        self.ack_flag = 1
+        self.ack_num = seq_num + 1
+        
+        flags = bytes([self.ack_flag | self.syn_flag << 1 | self.fin_flag << 2])
+        precheck = struct.pack('!HHIIB', self.port, self.rport, self.seq_num, self.ack_num, flags)
+        checksum = get_checksum(precheck)
+        ack_seg = struct.pack('!HHIIBH', self.port, self.rport, self.seq_num, self.ack_num, flags, checksum)
+
+        #send ACK and mark connected
+        StreamSocket.output(ack_seg, addr)
+        self.is_connected = True
 
         
 
@@ -175,11 +175,20 @@ class RDTSocket(StreamSocket):
         StreamSocket.send(bytearray([precheck, checksum]))
         pass
 
-
+def get_checksum(bytes):
+    total = bin(0)
+    for i in range(0, len(bytes) * 8, 16): #want to range over the number of bits
+        word = (bytes >> i) & 0xFFFF 
+        total += word
+        total = (total & 0xFFFF) + (total >> 16) #add the overflow
+    #add overflow
+    checksum = ~checksum & 0xFFFF #take complement and ensure only 16 bits
+    return checksum
 
 class RDTProtocol(Protocol):
     PROTO_ID = IPPROTO_RDT
     SOCKET_CLS = RDTSocket
+    
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -188,25 +197,28 @@ class RDTProtocol(Protocol):
         self.connecting_sockets = {} #dict stores sockets waiting for S SA A handshake ACK (remip, remport, sport) -> socket
         self.lock = threading.Lock()
         
+    #TODO - add locks
     def input(self, seg: struct, rhost):
-
+        print("Proto Input: arrived")
         ##handle the SYN case 
         rport, dport, seq_num, ack_num, flags, checksum, data = seg.unpack('!HHIIBH')
 
         if((flags >> 1 & 1) == 1): ##SYN flag set 
             #check if specified port is listening 
-            dest_sock: RDTSocket = self.bound_ports.get(seg[2:4])
+            dest_sock: RDTSocket = self.bound_ports.get(dport)
 
             #raise exception if port isn't bound or isn't listening 
             if(dest_sock == None):
-                print(f"RDT Input: port {seg[2:4]} is not bound")
+                print(f"RDT Input: port {dport} is not bound")
                 raise Exception
-            if(not dest_sock.is_listening):
+            if(dest_sock.status != 'LISTENING'):
                 raise StreamSocket.NotListening
             
             #create new socket for conn
             new_sock: RDTSocket = self.socket()
             new_sock.bind(random.randint(49152, 65535))
+            new_sock.parent = dport
+            new_sock.state = 'CONNECTING'
             self.connecting_sockets[(rhost, rport, dport)] = new_sock
 
             #send SYN ACK
@@ -226,4 +238,6 @@ class RDTProtocol(Protocol):
             parent_sock: RDTSocket = self.bound_ports[conn_sock.parent]
             parent_sock.conn_q.put((conn_sock, rhost, rport))
 
+            #remove entry 
+            self.connecting_sockets.pop((rhost, rport, dport))
         pass
