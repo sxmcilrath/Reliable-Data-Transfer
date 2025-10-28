@@ -51,18 +51,14 @@ class RDTSocket(StreamSocket):
         #set fields and bind
         self.proto.bound_ports[port] = self
         self.proto.lock.release()
+
         self.lock.acquire()
         self.port = port
-        self.is_bound = True #TODO - get rid
+        self.state = "BOUND"
         self.lock.release()
-        
-        #print(f"bind: successfully bound {port}.")
-        #unlock
-
         
 
     def listen(self):
-        
         
         print("listen: arrived")
         #err checking
@@ -137,7 +133,7 @@ class RDTSocket(StreamSocket):
                 segment = None
                 continue
             
-            _, _, seq_num, ack_num, flags, _= struct.unpack('!HHIIBH', segment)
+            rport, _, seq_num, ack_num, flags, _= struct.unpack('!HHIIBH', segment)
 
             if((ack_num != self.seq_num + 1) or (flags != 3)):
                 segment = None
@@ -146,20 +142,16 @@ class RDTSocket(StreamSocket):
                 print("connect: ACK recieved!")
             
 
-        #assemble ACK segment
-        self.syn_flag = 0
-        self.ack_flag = 1
-        self.ack_num = seq_num + 1
-        
-        flags = bytes([self.ack_flag | self.syn_flag << 1 | self.fin_flag << 2])
-        precheck = struct.pack('!HHIIB', self.port, self.rport, self.seq_num, self.ack_num, flags)
+        #assemble ACK segment        
+        flags = 1 | 0 << 1 | 0 << 2 #just doing this for myself lol
+        precheck = struct.pack('!HHIIB', self.port, self.rport, 0, seq_num + 1, flags)
         checksum = get_checksum(precheck)
-        ack_seg = struct.pack('!HHIIBH', self.port, self.rport, self.seq_num, self.ack_num, flags, checksum)
+        ack_seg = struct.pack('!HHIIBH', self.port, self.rport, 0, seq_num + 1, flags, checksum)
 
         #send ACK and mark connected
+        #TODO - what happens is the ACK gets dropped?
+        self.proto.conn_socks[(self.port, addr[0], rport)] = self
         StreamSocket.output(ack_seg, addr[0])
-        self.is_connected = True
-
         
 
     def send(self, data):
@@ -206,12 +198,14 @@ class RDTSocket(StreamSocket):
             print(f"Handle Segment: dest sock state: {dest_sock.state}")
             if(dest_sock.state != 'LISTENING'):
                 raise StreamSocket.NotListening
+            
             #create new socket for conn
             new_sock: RDTSocket = self.proto.socket()
-            new_sock.bind(self.port)
+            new_sock.port = self.port
             new_sock.parent = dport
+            new_sock.remote_addr = (rhost, rport)
             new_sock.state = 'CONNECTING'
-            self.proto.connecting_sockets[(new_sock.port, rhost, rport)] = new_sock
+            self.proto.conn_socks[(new_sock.port, rhost, rport)] = new_sock
 
             #send SYN ACK
             flags = 1 | 1 << 1 | 0 << 2
@@ -225,20 +219,17 @@ class RDTSocket(StreamSocket):
         #behavior for SYN ACK recieved
         if(flags == 3): 
             print("Handle Segment: SYN ACK Recieved")
-            #send ACK 
-            precheck = struct.pack("!HHIIB", self.port, rport, ack_num+1, seq_num + 1, 1)
-            checksum = get_checksum(precheck)
-            ack_seg = struct.pack("!HHIIBH", self.port, rport, ack_num+1, seq_num + 1, 1, checksum)
+            #pass off to connecting port q
+            self.q.put(seg)
 
-            self.output(ack_seg, rhost)
             return
 
         
         #behavior for handshake ACK recieved
         self.proto.lock.acquire()
         print(f"Handle Segment: Trying to get conn sock for - ({rhost}, {rport}, {dport})")
-        conn_sock: RDTSocket = self.proto.connecting_sockets.get((rhost, rport, dport))
-        print(f"Handle Segment: conn sock dict - {self.proto.connecting_sockets}")
+        conn_sock: RDTSocket = self.proto.conn_socks.get((rhost, rport, dport))
+        print(f"Handle Segment: conn sock dict - {self.proto.conn_socks}")
         self.proto.lock.release()
         
         if(flags == 1 and conn_sock != None): # ACK flag set and matching connection in progress
@@ -249,7 +240,7 @@ class RDTSocket(StreamSocket):
             parent_sock.conn_q.put((conn_sock, rhost, rport))
 
             #remove entry 
-            self.proto.connecting_sockets.pop((rhost, rport, dport))
+            self.proto.conn_socks.pop((rhost, rport, dport))
         else:
             print(f"Handle Segment: not Handshake - {flags}")
         return
@@ -263,7 +254,7 @@ class RDTProtocol(Protocol):
         super().__init__(*args, **kwargs)
         # Other initialization here
         self.bound_ports = {} #bool dictionary if ports are being used port # -> threading.Event
-        self.connecting_sockets = {} #dict stores sockets waiting for S SA A handshake ACK (remip, remport, sport) -> socket
+        self.conn_socks = {} #dict stores sockets waiting for S SA A handshake ACK (remip, remport, sport) -> socket
         self.server_sockets = {}
         self.lock = threading.Lock()
         
