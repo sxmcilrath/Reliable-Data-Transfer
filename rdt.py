@@ -116,7 +116,8 @@ class RDTSocket(StreamSocket):
         
         #assemble SYN segment
         flags = 0 | 1 << 1 | 0 << 2
-        precheck = struct.pack('!HHIIB', self.port, self.remote_addr[1], int(random.randint(0,4294967295)), int(0), flags)
+        
+        precheck = struct.pack('!HHIIB', self.port, self.remote_addr[1], int(random.randint(0,4294967295)), 0, flags)
         checksum = get_checksum(precheck)
         syn_seg = struct.pack('!HHIIBH', self.port, self.remote_addr[1], random.randint(0,4294967295), 0, flags, checksum)
 
@@ -135,7 +136,8 @@ class RDTSocket(StreamSocket):
             
             rport, _, seq_num, ack_num, flags, _= struct.unpack('!HHIIBH', segment)
 
-            if((ack_num != self.seq_num + 1) or (flags != 3)):
+            #TODO - verify seq number
+            if(flags != 3):
                 segment = None
                 print("connect: incorrect response")
             else:
@@ -144,14 +146,14 @@ class RDTSocket(StreamSocket):
 
         #assemble ACK segment        
         flags = 1 | 0 << 1 | 0 << 2 #just doing this for myself lol
-        precheck = struct.pack('!HHIIB', self.port, self.rport, 0, seq_num + 1, flags)
+        precheck = struct.pack('!HHIIB', self.port, self.remote_addr[1], 0, seq_num + 1, flags)
         checksum = get_checksum(precheck)
-        ack_seg = struct.pack('!HHIIBH', self.port, self.rport, 0, seq_num + 1, flags, checksum)
+        ack_seg = struct.pack('!HHIIBH', self.port, self.remote_addr[1], 0, seq_num + 1, flags, checksum)
 
         #send ACK and mark connected
         #TODO - what happens is the ACK gets dropped?
         self.proto.conn_socks[(self.port, addr[0], rport)] = self
-        StreamSocket.output(ack_seg, addr[0])
+        StreamSocket.output(self, ack_seg, addr[0])
         
 
     def send(self, data):
@@ -221,29 +223,28 @@ class RDTSocket(StreamSocket):
             print("Handle Segment: SYN ACK Recieved")
             #pass off to connecting port q
             self.q.put(seg)
-
             return
 
         
         #behavior for handshake ACK recieved
-        self.proto.lock.acquire()
-        print(f"Handle Segment: Trying to get conn sock for - ({rhost}, {rport}, {dport})")
-        conn_sock: RDTSocket = self.proto.conn_socks.get((rhost, rport, dport))
-        print(f"Handle Segment: conn sock dict - {self.proto.conn_socks}")
-        self.proto.lock.release()
+        # self.proto.lock.acquire()
+        # print(f"Handle Segment: Trying to get conn sock for - ({rhost}, {rport}, {dport})")
+        # conn_sock: RDTSocket = self.proto.conn_socks.get((rhost, rport, dport))
+        # print(f"Handle Segment: conn sock dict - {self.proto.conn_socks}")
+        # self.proto.lock.release()
         
-        if(flags == 1 and conn_sock != None): # ACK flag set and matching connection in progress
-            print('Handle Segment: ACK Received')
-            #need to place connection in the parents queue 
-            conn_sock.state = 'CONNECTED' #set child socket status
-            parent_sock: RDTSocket = self.bound_ports[conn_sock.parent]
-            parent_sock.conn_q.put((conn_sock, rhost, rport))
+        # if(flags == 1 and conn_sock != None): # ACK flag set and matching connection in progress
+        #     print('Handle Segment: ACK Received')
+        #     #need to place connection in the parents queue 
+        #     conn_sock.state = 'CONNECTED' #set child socket status
+        #     parent_sock: RDTSocket = self.bound_ports[conn_sock.parent]
+        #     parent_sock.conn_q.put((conn_sock, rhost, rport))
 
-            #remove entry 
-            self.proto.conn_socks.pop((rhost, rport, dport))
-        else:
-            print(f"Handle Segment: not Handshake - {flags}")
-        return
+        #     #remove entry 
+        #     self.proto.conn_socks.pop((rhost, rport, dport))
+        # else:
+        #     print(f"Handle Segment: not Handshake - {flags}")
+        # return
 
 class RDTProtocol(Protocol):
     PROTO_ID = IPPROTO_RDT
@@ -259,6 +260,7 @@ class RDTProtocol(Protocol):
         self.lock = threading.Lock()
         
     #TODO - add locks
+    #TODO - handle handshake ACKs 
     def input(self, seg, rhost):
         #we want to perform err check and then send to proper socket
         #extract fields
