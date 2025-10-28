@@ -63,7 +63,7 @@ class RDTSocket(StreamSocket):
 
     def listen(self):
         
-        self.lock.acquire()
+        
         print("listen: arrived")
         #err checking
         if(self.port == None):
@@ -71,7 +71,12 @@ class RDTSocket(StreamSocket):
         if(self.state == 'CONNECTED'):
             raise StreamSocket.AlreadyConnected
         
-        self.is_listening = True #TODO - get rid of
+        #add to protocol server sockets and change state
+        self.proto.lock.acquire()
+        self.proto.server_sockets[self.port] = self
+        self.proto.lock.release()
+
+        self.lock.acquire()
         self.state = 'LISTENING'
         print(f"listen: listening on {self.port}")
         self.lock.release()
@@ -101,7 +106,6 @@ class RDTSocket(StreamSocket):
         print('connect: waiting for sock lock')
         self.lock.acquire()
         print('connect: sock lock acquired')
-
         self.remote_addr = addr
         print('connect: sock lock released')
         self.lock.release()
@@ -133,17 +137,9 @@ class RDTSocket(StreamSocket):
                 segment = None
                 continue
             
-            #verify no bits flipped
-            #TODO - implement verify_checksum
-            # #err = verify_checksum(segment)
-            # if(err):
-            #     segment = None
-            
-            #verify ack 
             _, _, seq_num, ack_num, flags, _= struct.unpack('!HHIIBH', segment)
 
-            syn_flag = (flags >> 1) & 1
-            if((ack_num != self.seq_num + 1) or (syn_flag != 1)):
+            if((ack_num != self.seq_num + 1) or (flags != 3)):
                 segment = None
                 print("connect: incorrect response")
             else:
@@ -210,13 +206,12 @@ class RDTSocket(StreamSocket):
             print(f"Handle Segment: dest sock state: {dest_sock.state}")
             if(dest_sock.state != 'LISTENING'):
                 raise StreamSocket.NotListening
-            
             #create new socket for conn
             new_sock: RDTSocket = self.proto.socket()
-            new_sock.bind(random.randint(49152, 65535))
+            new_sock.bind(self.port)
             new_sock.parent = dport
             new_sock.state = 'CONNECTING'
-            self.proto.connecting_sockets[(rhost, rport, new_sock.port)] = new_sock
+            self.proto.connecting_sockets[(new_sock.port, rhost, rport)] = new_sock
 
             #send SYN ACK
             flags = 1 | 1 << 1 | 0 << 2
@@ -269,6 +264,7 @@ class RDTProtocol(Protocol):
         # Other initialization here
         self.bound_ports = {} #bool dictionary if ports are being used port # -> threading.Event
         self.connecting_sockets = {} #dict stores sockets waiting for S SA A handshake ACK (remip, remport, sport) -> socket
+        self.server_sockets = {}
         self.lock = threading.Lock()
         
     #TODO - add locks
@@ -282,22 +278,25 @@ class RDTProtocol(Protocol):
         except: 
             print("Proto Input: err while unpacking segment")
             return
-        
         #err check
         if(not verify_checksum(seg)):
             #what should be done? Resend ACK?
             pass
-
+        
+        #check if SYN
+        if(flags == 2):
+            #demux to listening ports
+            dest_sock = self.server_sockets.get(dport)
+            if(dest_sock == None):
+                raise RDTSocket.NotBound()
+            dest_sock.handle_segment(seg, rhost)
+        
         #demux
         dest_sock = self.bound_ports.get(dport)
-        
         if( dest_sock == None): #check if valid port
             raise RDTSocket.NotBound()
         dest_sock.handle_segment(seg, rhost)
         
-        
-
-
 ##HELPERS##
 
 #calculate checksum given sequence of bytes 
