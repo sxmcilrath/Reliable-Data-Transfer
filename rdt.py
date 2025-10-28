@@ -167,7 +167,7 @@ class RDTSocket(StreamSocket):
         
 
     def send(self, data):
-
+        
         '''
         We need
         - source prt
@@ -177,6 +177,7 @@ class RDTSocket(StreamSocket):
         - checksum -> calc as last step
         - data - given as param
         '''
+        print("send: arrived")
         #check if connected
         if(not self.is_connected):
             raise StreamSocket.NotConnected
@@ -189,7 +190,7 @@ class RDTSocket(StreamSocket):
         StreamSocket.send(bytearray([precheck, checksum]))
         pass
 
-    def handle_segment(self, seg):
+    def handle_segment(self, seg, rhost):
 
         print("Handle Segment: arrived")
         rport, dport, seq_num, ack_num, flags, checksum = struct.unpack('!HHIIBH', seg)
@@ -211,37 +212,52 @@ class RDTSocket(StreamSocket):
                 raise StreamSocket.NotListening
             
             #create new socket for conn
-            new_sock: RDTSocket = self.socket()
+            new_sock: RDTSocket = self.proto.socket()
             new_sock.bind(random.randint(49152, 65535))
             new_sock.parent = dport
             new_sock.state = 'CONNECTING'
-            self.connecting_sockets[(rhost, rport, dport)] = new_sock
+            self.proto.connecting_sockets[(rhost, rport, new_sock.port)] = new_sock
 
             #send SYN ACK
             flags = 1 | 1 << 1 | 0 << 2
             pre_check = struct.pack('!HHIIB', new_sock.port, rport, random.randint(0,10000), seq_num + 1, flags)
             checksum = get_checksum(pre_check)
-            ack_seg = struct.pack('!HHIIBH', new_sock.port, rport, random.randint(0,10000), seq_num + 1, flags, checksum)
+            synack_seg = struct.pack('!HHIIBH', new_sock.port, rport, random.randint(0,10000), seq_num + 1, flags, checksum)
 
-            new_sock.output(ack_seg, rhost)
+            new_sock.output(synack_seg, rhost)
             return
         
         #behavior for SYN ACK recieved
         if(flags == 3): 
-            pass
+            print("Handle Segment: SYN ACK Recieved")
+            #send ACK 
+            precheck = struct.pack("!HHIIB", self.port, rport, ack_num+1, seq_num + 1, 1)
+            checksum = get_checksum(precheck)
+            ack_seg = struct.pack("!HHIIBH", self.port, rport, ack_num+1, seq_num + 1, 1, checksum)
+
+            self.output(ack_seg, rhost)
+            return
+
         
         #behavior for handshake ACK recieved
-        conn_sock: RDTSocket = self.connecting_sockets.get((rhost, rport, dport))
+        self.proto.lock.acquire()
+        print(f"Handle Segment: Trying to get conn sock for - ({rhost}, {rport}, {dport})")
+        conn_sock: RDTSocket = self.proto.connecting_sockets.get((rhost, rport, dport))
+        print(f"Handle Segment: conn sock dict - {self.proto.connecting_sockets}")
+        self.proto.lock.release()
+        
         if(flags == 1 and conn_sock != None): # ACK flag set and matching connection in progress
-            print('Proto Input: handle ACK')
+            print('Handle Segment: ACK Received')
             #need to place connection in the parents queue 
             conn_sock.state = 'CONNECTED' #set child socket status
             parent_sock: RDTSocket = self.bound_ports[conn_sock.parent]
             parent_sock.conn_q.put((conn_sock, rhost, rport))
 
             #remove entry 
-            self.connecting_sockets.pop((rhost, rport, dport))
-        pass
+            self.proto.connecting_sockets.pop((rhost, rport, dport))
+        else:
+            print(f"Handle Segment: not Handshake - {flags}")
+        return
 
 class RDTProtocol(Protocol):
     PROTO_ID = IPPROTO_RDT
@@ -277,7 +293,7 @@ class RDTProtocol(Protocol):
         
         if( dest_sock == None): #check if valid port
             raise RDTSocket.NotBound()
-        dest_sock.handle_segment(seg)
+        dest_sock.handle_segment(seg, rhost)
         
         
 
@@ -295,3 +311,13 @@ def get_checksum(precheck):
     #add overflow
     checksum = ~total & 0xFFFF #take complement and ensure only 16 bits
     return checksum
+
+#break seg into 16 bits and add
+#return true if valid, false if bits flipped 
+def verify_checksum(seg):
+    total = 0
+    seg_int = int.from_bytes(seg, "big")
+    for i in range(0, len(seg)*8, 16):
+        word = (seg_int >> i) & 0xFFFF
+        total += word
+    return (total == 0) 
