@@ -15,20 +15,8 @@ class RDTSocket(StreamSocket):
         super().__init__(*args, **kwargs)
         # Other initialization here
         
-        #status trackers
-        self.is_connected = False
-        self.is_bound = False
-        self.is_listening = False
-
         #TODO - refactor from booleans to state
         self.state = 'CLOSED' # Can be CLOSED, CONNECTING, CONNECTED, LISTENING
-
-        #segment vars/flags
-        self.seq_num = 0
-        self.ack_num = 0
-        self.syn_flag = 0
-        self.ack_flag = 0
-        self.fin_flag = 0
 
         self.port = None
         self.remote_addr = None
@@ -98,9 +86,9 @@ class RDTSocket(StreamSocket):
     def connect(self, addr):
         print(f"connect: self port - {self.port} arrived w/ address: {addr}")
         #exceptions
-        if(self.is_connected):
+        if(self.state == 'CONNECTED'):
             raise StreamSocket.AlreadyConnected
-        if(self.is_listening):
+        if(self.state == 'LISTENING'):
             raise StreamSocket.AlreadyListening
         
         #reset instance vars
@@ -188,7 +176,7 @@ class RDTSocket(StreamSocket):
         '''
         print("send: arrived")
         #check if connected
-        if(not self.is_connected):
+        if(self.state != 'CONNECTED'):
             raise StreamSocket.NotConnected
         
 
