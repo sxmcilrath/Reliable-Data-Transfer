@@ -45,7 +45,7 @@ class RDTSocket(StreamSocket):
         if(self.proto.bound_ports.get(port) != None):
             raise StreamSocket.AddressInUse
         #check if alr connected
-        if(self.is_connected):
+        if(self.state == 'CONNECTED'):
             raise StreamSocket.AlreadyConnected
         
         #set fields and bind
@@ -86,6 +86,11 @@ class RDTSocket(StreamSocket):
         print('accept: checking q for connection')
         new_sock, rhost, rport = self.conn_q.get(5) #check connection q for new conns
         print('accept: connection accepted')
+        
+        #set state
+        new_sock.lock.acquire()
+        new_sock.state = 'CONNECTED'
+        new_sock.lock.release()
 
         return (new_sock, (rhost, rport)) #return conn
         
