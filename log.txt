@@ -1,0 +1,1437 @@
+bind: attempting to bind 26093.
+listen: arrived
+listen: listening on 26093
+bind: attempting to bind 2531.
+listen: arrived
+listen: listening on 2531
+accept: arrived at port - (2531)
+accept: checking q for connection
+connect: self port - None arrived w/ address: ('192.168.10.2', 2531)
+connect: waiting for sock lock
+connect: sock lock acquired
+connect: sock lock released
+connect: self port - 54982
+connect: sending SYN
+connect: storing connection - (54982, 192.168.10.2, 2531)
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-2196336981 ack-num0 flags-2 datalen-0 checksum-5929
+Proto Input: SYN Recieved
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-2196336981 ack-num0 flags-2 checksum-5929
+Handle Segment: SYN Packet Recieved
+Handle Segment: dest sock state: LISTENING
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-5655 ack-num2196336982 flags-3 datalen-0 checksum-4622
+Proto Input: SYNACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available keys: [(54982, '192.168.10.2', 2531)]
+Proto Input: placing SYNACK on 54982's q 
+connect: Something put in q!
+connect: ACK recieved!
+connect: Sending ACK!
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num5656 flags-1 datalen-0 checksum-15880
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: [(2531, '192.168.10.1', 54982)]
+Proto Input: handshake ACK found!
+accept: connection accepted
+(54982) send: arrived
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num0 flags-0 datalen-12 checksum-57810
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num0 flags-0 checksum-57810
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-54982 dport-2531 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (2531, 192.168.10.1, 54982)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (2531, 192.168.10.1, 54982), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-54982 dport-2531 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 
+Proto Input: arrived
+Proto Input: rport-2531 dport-54982 seq-0 ack-num2 flags-0 datalen-1 checksum-0
+Proto Input: ACK - looking for key (54982, 192.168.10.2, 2531)
+Proto Input: Available connecting keys: []
+Proto Input: no mid-handshake found for (54982, 192.168.10.2, 2531), flags=0
+Proto Input: handing off to socket
+Handle Segment: arrived
+Handle Segment: rport-2531 dport-54982 seq-0 ack-num2 flags-0 checksum-0
+Handle Segment: Delivering data
+Handle Segment: Data delivered, sending ACK 

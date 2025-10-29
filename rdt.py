@@ -191,12 +191,12 @@ class RDTSocket(StreamSocket):
 
         #wait for ack 
         ack_seg = None
-        while(ack_seg == None):
-
-            try: 
-                self.seg_q.get(timeout=5)
+        while ack_seg is None:
+            try:
+                ack_seg = self.seg_q.get(timeout=5)
             except queue.Empty:
                 print(f"({self.port}) send: nothing in q")
+                # loop again until we receive an ACK
                 pass
 
         print(f"({self.port}) send: ack recieved")
@@ -259,17 +259,18 @@ class RDTSocket(StreamSocket):
             #deliver data
             print("Handle Segment: Delivering data")
             self.deliver(seg[HDR_SIZE:])
-            
-            #assemble ACK  
+
+            # assemble ACK
             ack_num = seq_num + 1
             data_len = 0
             flags = 1
 
-            precheck = struct.pack(PRECHK_HDR_FRMT, self.port, self.remote_addr[1], 0, ack_num + 1, data_len, flags)
-            checksum = verify_checksum(precheck)
-            seg = struct.pack(HDR_FRMT, self.port, self.remote_addr[1], 0, ack_num + 1, data_len, flags, checksum)
+            # PRECHK_HDR_FRMT layout is: srcport, dstport, seq, ack, flags, datalen
+            precheck = struct.pack(PRECHK_HDR_FRMT, self.port, self.remote_addr[1], 0, ack_num, flags, data_len)
+            checksum = get_checksum(precheck)
+            seg = struct.pack(HDR_FRMT, self.port, self.remote_addr[1], 0, ack_num, flags, data_len, checksum)
 
-            #send ACK 
+            # send ACK
             print("Handle Segment: Data delivered, sending ACK ")
             self.output(seg, self.remote_addr[0])
 
@@ -296,10 +297,15 @@ class RDTProtocol(Protocol):
         #extract fields
         try:
             print("Proto Input: arrived")
-            rport, dport, seq_num, ack_num, flags, data_len, checksum = struct.unpack(HDR_FRMT, seg[:HDR_FRMT])
-            print(f"Proto Input: rport-{rport} dport-{dport} seq-{seq_num} ack-num{ack_num} flags-{flags} checksum-{checksum}")
-        except: 
-            print("Proto Input: err while unpacking segment")
+            rport, dport, seq_num, ack_num, flags, data_len, checksum = struct.unpack(HDR_FRMT, seg[:HDR_SIZE])
+            print(f"Proto Input: rport-{rport} dport-{dport} seq-{seq_num} ack-num{ack_num} flags-{flags} datalen-{data_len} checksum-{checksum}")
+        except Exception as e: 
+            print(f"Proto Input: err while unpacking segment - {e}")
+            return
+        
+        # Prevent loopback: ignore packets sent by this same host+port
+        if (rhost, rport) == (self.host.ip, dport):
+            print(f"Proto Input: loopback detected on ({rhost}, {rport}) — dropping packet")
             return
         #err check
         if(not verify_checksum(seg)):
@@ -332,11 +338,15 @@ class RDTProtocol(Protocol):
 
 
         #check if handshake ACK 
+
         print(f"Proto Input: ACK - looking for key ({dport}, {rhost}, {rport})")
         print(f"Proto Input: Available connecting keys: {list(self.connecting_socks.keys())}")
         dest_sock: RDTSocket = self.connecting_socks.pop((dport, rhost, rport), None)
+
         if(flags == 1 and dest_sock != None):
+
             print("Proto Input: handshake ACK found!")
+
             #place on accepting queue 
             self.connected_socks[(dport, rhost, rport)] = dest_sock
             dest_sock.parent.conn_q.put((dest_sock, rhost, rport))
@@ -350,7 +360,8 @@ class RDTProtocol(Protocol):
                 return
             
             #pass to socket
-            dest_sock.handle_segment(seg)
+            print(f"Proto Input: handing off to socket")
+            dest_sock.handle_segment(seg, rhost)
             
 
 
