@@ -10,7 +10,7 @@ import random
 IPPROTO_RDT = 0xfe
 Q_SIZE = 10
 PRECHK_HDR_FRMT = '!HHIIBH'
-HDR_FRMT = '!HHIIBHH'
+HDR_FRMT = '!HHIIBHB'
 HDR_SIZE = struct.calcsize(HDR_FRMT)
 
 class RDTSocket(StreamSocket):
@@ -117,7 +117,7 @@ class RDTSocket(StreamSocket):
 
         precheck = struct.pack(PRECHK_HDR_FRMT, self.port, self.remote_addr[1], seq_num, 0, flags, data_len)
         checksum = get_checksum(precheck)
-        syn_seg = struct.pack(HDR_FRMT, self.port, self.remote_addr[1], seq_num, 0, flags, data_len, checksum)
+        syn_seg = struct.pack(HDR_FRMT, self.port, self.remote_addr[1], seq_num, 0, flags, data_len, checksum[0])
 
         #keep sending SYN until SYNACK is recieved
         segment = None
@@ -126,10 +126,10 @@ class RDTSocket(StreamSocket):
             print(f'connect: storing connection - ({self.port}, {addr[0]}, {addr[1]})')
             self.proto.connecting_socks[(self.port, addr[0], addr[1])] = self #store connection in connecting table
             self.state = 'CONNECTING'
-            self.output(syn_seg, addr[0])
 
             #wait for SYNACK
             try:
+                self.output(syn_seg, addr[0])
                 segment = self.seg_q.get(timeout=10) #TODO = change to proper timeout
             except queue.Empty: 
                 segment = None
@@ -153,7 +153,7 @@ class RDTSocket(StreamSocket):
         data_len = 0
         precheck = struct.pack(PRECHK_HDR_FRMT, self.port, self.remote_addr[1], 0, seq_num + 1, flags, data_len)
         checksum = get_checksum(precheck)
-        ack_seg = struct.pack(HDR_FRMT, self.port, self.remote_addr[1], 0, seq_num + 1, flags, data_len, checksum)
+        ack_seg = struct.pack(HDR_FRMT, self.port, self.remote_addr[1], 0, seq_num + 1, flags, data_len, checksum[0])
 
         #move from connecting to connected
         self.proto.lock.acquire()
@@ -184,15 +184,15 @@ class RDTSocket(StreamSocket):
         flags = 0
         precheck = struct.pack(PRECHK_HDR_FRMT, self.port, self.remote_addr[1], 0, 0, flags, len(data)) #TODO ACK and Seq nums
         checksum = get_checksum(precheck + data)
-        hdr = struct.pack(HDR_FRMT, self.port, self.remote_addr[1], 0, 0, flags, len(data), checksum)
+        hdr = struct.pack(HDR_FRMT, self.port, self.remote_addr[1], 0, 0, flags, len(data), checksum[0])
 
         #send
-        self.output(hdr+data, self.remote_addr[0])
 
         #wait for ack 
         ack_seg = None
         while ack_seg is None:
             try:
+                self.output(hdr+data, self.remote_addr[0])
                 ack_seg = self.seg_q.get(timeout=5)
             except queue.Empty:
                 print(f"({self.port}) send: nothing in q")
@@ -237,7 +237,7 @@ class RDTSocket(StreamSocket):
             data_len = 0
             pre_check = struct.pack(PRECHK_HDR_FRMT, new_sock.port, rport, random.randint(0,10000), seq_num + 1, flags, data_len)
             checksum = get_checksum(pre_check)
-            synack_seg = struct.pack(HDR_FRMT, new_sock.port, rport, random.randint(0,10000), seq_num + 1, flags, data_len, checksum)
+            synack_seg = struct.pack(HDR_FRMT, new_sock.port, rport, random.randint(0,10000), seq_num + 1, flags, data_len, checksum[0])
             self.output(synack_seg, rhost) 
             return
         
@@ -268,7 +268,7 @@ class RDTSocket(StreamSocket):
             # PRECHK_HDR_FRMT layout is: srcport, dstport, seq, ack, flags, datalen
             precheck = struct.pack(PRECHK_HDR_FRMT, self.port, self.remote_addr[1], 0, ack_num, flags, data_len)
             checksum = get_checksum(precheck)
-            seg = struct.pack(HDR_FRMT, self.port, self.remote_addr[1], 0, ack_num, flags, data_len, checksum)
+            seg = struct.pack(HDR_FRMT, self.port, self.remote_addr[1], 0, ack_num, flags, data_len, checksum[0])
 
             # send ACK
             print("Handle Segment: Data delivered, sending ACK ")
@@ -309,8 +309,9 @@ class RDTProtocol(Protocol):
             return
         #err check
         if(not verify_checksum(seg)):
-            #what should be done? Resend ACK?
-            pass
+            print('wrong checksum')
+            #drop packet
+            return
         
         #check if SYN
         if(flags == 2):
@@ -365,29 +366,19 @@ class RDTProtocol(Protocol):
             
 
 
-        
-
-        
+                
 ##HELPERS##
 
-#calculate checksum given sequence of bytes 
-def get_checksum(precheck):
-    total = 0
-    precheck_int = int.from_bytes(precheck, "big")
-    for i in range(0, len(precheck) * 8, 16): #want to range over the number of bits
-        word = (precheck_int >> i) & 0xFFFF 
-        total += word
-        total = (total & 0xFFFF) + (total >> 16) #add the overflow
-    #add overflow
-    checksum = ~total & 0xFFFF #take complement and ensure only 16 bits
-    return checksum
+def get_checksum(precheck: bytes) -> bytes:
+    """Return 1-byte checksum as bytes object."""
+    checksum_val = (~(sum(precheck) & 0xFF)) & 0xFF  # invert and mask to 1 byte
+    print(f"checksum val: {checksum_val}")
+    print(f"precheck sum: {sum(precheck) & 0xFF}")
+    return bytes([checksum_val])
 
-#break seg into 16 bits and add
-#return true if valid, false if bits flipped 
-def verify_checksum(seg):
-    total = 0
-    seg_int = int.from_bytes(seg, "big")
-    for i in range(0, len(seg)*8, 16):
-        word = (seg_int >> i) & 0xFFFF
-        total += word
-    return (total == 0) 
+
+def verify_checksum(segment: bytes) -> bool:
+    """Verify simple 1-byte checksum."""
+    total = sum(segment) & 0xFF
+    print(f"total: {total}")
+    return total == 0xFF
