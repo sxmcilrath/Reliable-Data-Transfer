@@ -255,15 +255,8 @@ class RDTSocket(StreamSocket):
         rport, dport, seq_num, ack_num, flags, data_len, checksum = struct.unpack(HDR_FRMT, seg[:HDR_SIZE])
         ##print(f"Handle Segment: rport-{rport} dport-{dport} seq-{seq_num} ack-num{ack_num} flags-{flags} checksum-{checksum}")
         
-        #handle SYN ACK recieved
-        if(flags == 3): 
-            ##print("Handle Segment: SYN ACK Recieved")
-            #pass off to connecting port q
-            self.seg_q.put(seg)
-            return
-        
         #handle non-handshake ACK
-        elif(flags == 1):
+        if(flags == 1):
             ##print("Handle Segment: Non-Handshake Recieved") 
             #pass to q that's waiting 
             self.seg_q.put(seg)
