@@ -249,37 +249,28 @@ class RDTSocket(StreamSocket):
         return
         
 
-    def handle_segment(self, seg, rhost):
+    def handle_data(self, seg, rhost):
 
         ##print("Handle Segment: arrived")
         rport, dport, seq_num, ack_num, flags, data_len, checksum = struct.unpack(HDR_FRMT, seg[:HDR_SIZE])
         ##print(f"Handle Segment: rport-{rport} dport-{dport} seq-{seq_num} ack-num{ack_num} flags-{flags} checksum-{checksum}")
-        
-        #handle non-handshake ACK
-        if(flags == 1):
-            ##print("Handle Segment: Non-Handshake Recieved") 
-            #pass to q that's waiting 
-            self.seg_q.put(seg)
-        
-        #handle data recieved
-        else:
-            #deliver data
-            ##print("Handle Segment: Delivering data")
-            self.deliver(seg[HDR_SIZE:])
+        #deliver data
+        ##print("Handle Segment: Delivering data")
+        self.deliver(seg[HDR_SIZE:])
 
-            # assemble ACK
-            ack_num = seq_num + 1
-            data_len = 0
-            flags = 1
+        # assemble ACK
+        ack_num = seq_num + 1
+        data_len = 0
+        flags = 1
 
-            # PRECHK_HDR_FRMT layout is: srcport, dstport, seq, ack, flags, datalen
-            precheck = struct.pack(PRECHK_HDR_FRMT, self.port, self.remote_addr[1], 0, ack_num, flags, data_len)
-            checksum = get_checksum(precheck)
-            seg = struct.pack(HDR_FRMT, self.port, self.remote_addr[1], 0, ack_num, flags, data_len, checksum[0])
+        # PRECHK_HDR_FRMT layout is: srcport, dstport, seq, ack, flags, datalen
+        precheck = struct.pack(PRECHK_HDR_FRMT, self.port, self.remote_addr[1], 0, ack_num, flags, data_len)
+        checksum = get_checksum(precheck)
+        seg = struct.pack(HDR_FRMT, self.port, self.remote_addr[1], 0, ack_num, flags, data_len, checksum[0])
 
-            # send ACK
-            ##print("Handle Segment: Data delivered, sending ACK ")
-            self.output(seg, self.remote_addr[0])
+        # send ACK
+        ##print("Handle Segment: Data delivered, sending ACK ")
+        self.output(seg, self.remote_addr[0])
 
     
 
@@ -335,7 +326,6 @@ class RDTProtocol(Protocol):
             ##print(f"Proto Input: SYNACK - looking for key ({dport}, {rhost}, {rport})")
             ##print(f"Proto Input: Available keys: {list(self.connecting_socks.keys())}")
             dest_sock = self.connecting_socks.get((self.host.ip, dport, rhost, rport))
-
             if(dest_sock == None):
                 ##print(f"Proto Input: Conn not found - ({dport}, {rhost}, {rport})")
                 return
@@ -343,8 +333,6 @@ class RDTProtocol(Protocol):
             ##print(f'Proto Input: placing SYNACK on {dest_sock.port}\'s q ')
             dest_sock.seg_q.put(seg)
             return
-
-
 
         #check if handshake ACK 
 
@@ -359,18 +347,20 @@ class RDTProtocol(Protocol):
             #place on accepting queue 
             self.connected_socks[(self.host.ip, dport, rhost, rport)] = dest_sock
             dest_sock.parent.conn_q.put((dest_sock, rhost, rport))
-        else: #data recieved
-            ##print(f"Proto Input: no mid-handshake found for ({dport}, {rhost}, {rport}), flags={flags}")
 
+        else: #data or data ACK recieved
+            ##print(f"Proto Input: no mid-handshake found for ({dport}, {rhost}, {rport}), flags={flags}")
             #check if there's a conn
-            dest_sock = self.connected_socks.get((self.host.ip, dport, rhost, rport))
+            dest_sock: RDTSocket = self.connected_socks.get((self.host.ip, dport, rhost, rport))
             if(dest_sock == None):
                 ##print(f"Proto Input: no connected tuple found for ({dport}, {rhost}, {rport}), flags={flags}")
                 return
-            
-            #pass to socket
-            ##print(f"Proto Input: handing off to socket")
-            dest_sock.handle_segment(seg, rhost)
+            if flags == 1: #ACK recieved, place on seg q
+                dest_sock.seg_q.put(seg)
+            else:
+                #pass to socket
+                ##print(f"Proto Input: handing off to socket")
+                dest_sock.handle_data(seg, rhost)
             
 
 
