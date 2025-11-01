@@ -31,7 +31,7 @@ class RDTSocket(StreamSocket):
         self.seq_num = 0
         self.last_recieved_num = None
 
-        self.ack_wait = threading.Event()
+        self.ack_event = threading.Event()
 
     def bind(self, port):
         ##print(f"bind: attempting to bind {port}.")
@@ -118,12 +118,12 @@ class RDTSocket(StreamSocket):
         ##print(f"connect: self port - {self.port}")
         #assemble SYN segment
         flags = 0 | 1 << 1 | 0 << 2
-        seq_num = random.randint(0,4294967295)
+        self.seq_num = 0 
         data_len = 0
 
-        precheck = struct.pack(PRECHK_HDR_FRMT, self.port, self.remote_addr[1], seq_num, 0, flags, data_len)
+        precheck = struct.pack(PRECHK_HDR_FRMT, self.port, self.remote_addr[1], self.seq_num, 0, flags, data_len)
         checksum = get_checksum(precheck)
-        syn_seg = struct.pack(HDR_FRMT, self.port, self.remote_addr[1], seq_num, 0, flags, data_len, checksum[0])
+        syn_seg = struct.pack(HDR_FRMT, self.port, self.remote_addr[1], self.seq_num, 0, flags, data_len, checksum[0])
 
         #keep sending SYN until SYNACK is recieved
         segment = None
@@ -143,23 +143,23 @@ class RDTSocket(StreamSocket):
             
             ##print("connect: Something put in q!")
             rport, _, seq_num, ack_num, flags, _, _= struct.unpack(HDR_FRMT, segment[:HDR_SIZE])
-
-            #TODO - verify seq number
-
+            
             #if not SYN ACK
             if(flags != 3):
                 segment = None
                 ##print("connect: incorrect response")
             else:
-                print("connect: ACK recieved!")
+                print("connect: SYNACK recieved!")
             
 
         #assemble ACK segment        
         flags = 1 | 0 << 1 | 0 << 2 #just doing this for myself lol
         data_len = 0
-        precheck = struct.pack(PRECHK_HDR_FRMT, self.port, self.remote_addr[1], 0, seq_num + 1, flags, data_len)
+        self.seq_num ^= 1
+
+        precheck = struct.pack(PRECHK_HDR_FRMT, self.port, self.remote_addr[1], self.seq_num, seq_num ^ 1, flags, data_len)
         checksum = get_checksum(precheck)
-        ack_seg = struct.pack(HDR_FRMT, self.port, self.remote_addr[1], 0, seq_num + 1, flags, data_len, checksum[0])
+        ack_seg = struct.pack(HDR_FRMT, self.port, self.remote_addr[1], self.seq_num, seq_num ^ 1, flags, data_len, checksum[0])
 
         #move from connecting to connected
         self.proto.lock.acquire()
@@ -169,10 +169,11 @@ class RDTSocket(StreamSocket):
 
         self.state = "CONNECTED"
 
-        #send ACK and mark connected
-        #TODO - what happens is the ACK gets dropped?
-        ##print("connect: Sending ACK!")
+        #send ACK, if dropped -> server resends SYNACK -> client resends ACK
         self.output(ack_seg, addr[0])
+        return
+
+
 
     def send(self, data):
         '''
@@ -237,7 +238,6 @@ class RDTSocket(StreamSocket):
         new_sock.parent = self
         new_sock.remote_addr = (rhost, rport)
         new_sock.state = 'CONNECTING'
-        self.proto.connecting_socks[(self.proto.host.ip, self.port, rhost, rport)] = new_sock
 
         #send SYN ACK
         flags = 1 | 1 << 1 | 0 << 2
@@ -246,32 +246,22 @@ class RDTSocket(StreamSocket):
         checksum = get_checksum(pre_check)
         synack_seg = struct.pack(HDR_FRMT, new_sock.port, rport, self.seq_num, seq_num + 1, flags, data_len, checksum[0])
         
-        # inside handle_syn after you build synack_seg:
-        new_sock.ack_event = threading.Event()   # per-connection event
-
+        # Make sure the ACK event is cleared before starting
+        self.ack_event.clear()
+        
         # store the child socket in connecting_socks BEFORE starting resender
         self.proto.connecting_socks[(self.proto.host.ip, self.port, rhost, rport)] = new_sock
 
         # send first SYN-ACK immediately
         self.output(synack_seg, rhost)
 
-        # originally ack event was blocking on the thread that needed to signal the socket
-        # start a daemon thread to resend the SYN-ACK until ack_event is set
-        def synack_resender(parent_socket, synack_seg, rhost, ack_event,
-                            interval=1.0):
-            while not ack_event.is_set():
-                # wait for interval or until ack_event is set
-                ack_event.wait(timeout=interval)
-                if ack_event.is_set():
-                    break
-                # resend
-                parent_socket.output(synack_seg, rhost)
-
+        def synack_resender():
+            while not self.ack_event.wait(timeout=5):  # Wait up to 5 seconds for ACK
+                # If event wasn't set (timeout occurred), resend
+                self.output(synack_seg, rhost)
 
         # start as daemon so it won't block process exit
-        t = threading.Thread(target=synack_resender,
-                            args=(self, synack_seg, rhost, new_sock.ack_event),
-                            daemon=True)
+        t = threading.Thread(target=synack_resender, daemon=True)
         t.start()
 
         # return immediately (do NOT wait here)
@@ -353,14 +343,24 @@ class RDTProtocol(Protocol):
         #check if SYNACK 
         elif(flags == 3):
             ##print(f"Proto Input: SYNACK - looking for key ({dport}, {rhost}, {rport})")
-            ##print(f"Proto Input: Available keys: {list(self.connecting_socks.keys())}")
+            # First check if we're still connecting
             dest_sock = self.connecting_socks.get((self.host.ip, dport, rhost, rport))
-            if(dest_sock == None):
-                ##print(f"Proto Input: Conn not found - ({dport}, {rhost}, {rport})")
+            if dest_sock is not None:
+                ##print(f'Proto Input: placing SYNACK on {dest_sock.port}\'s q ')
+                dest_sock.seg_q.put(seg)
                 return
-
-            ##print(f'Proto Input: placing SYNACK on {dest_sock.port}\'s q ')
-            dest_sock.seg_q.put(seg)
+                
+            # If not in connecting_socks, check if we're already connected
+            dest_sock = self.connected_socks.get((self.host.ip, dport, rhost, rport))
+            if dest_sock is not None:
+                # We already received SYNACK and sent ACK before, but server didn't get it
+                # Resend the ACK
+                flags = 1  # ACK flag
+                data_len = 0
+                precheck = struct.pack(PRECHK_HDR_FRMT, dport, rport, dest_sock.seq_num, seq_num ^ 1, flags, data_len)
+                checksum = get_checksum(precheck)
+                ack_seg = struct.pack(HDR_FRMT, dport, rport, dest_sock.seq_num, seq_num ^ 1, flags, data_len, checksum[0])
+                dest_sock.output(ack_seg, rhost)
             return
 
         #check if handshake ACK 
@@ -370,13 +370,16 @@ class RDTProtocol(Protocol):
         dest_sock: RDTSocket = self.connecting_socks.pop((self.host.ip, dport, rhost, rport), None)
 
         if(flags == 1 and dest_sock != None):
-            
             ##print("Proto Input: handshake ACK found!")
-
-            #place on accepting queue 
+            
+            # Add to connected sockets before setting event
             self.connected_socks[(self.host.ip, dport, rhost, rport)] = dest_sock
-            dest_sock.parent.ack_wait.set()
+            
+            # Put on connection queue first
             dest_sock.parent.conn_q.put((dest_sock, rhost, rport))
+            
+            # Set the event last - this unblocks the handle_syn thread
+            dest_sock.parent.ack_event.set()
 
         else: #data or data ACK recieved
             #check if there's a conn
