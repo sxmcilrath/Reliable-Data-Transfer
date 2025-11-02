@@ -29,7 +29,7 @@ class RDTSocket(StreamSocket):
 
         #packet drop info
         self.seq_num = 0
-        self.last_recieved_num = None
+        self.last_recieved_num = 0
 
         self.ack_event = threading.Event()
 
@@ -120,7 +120,6 @@ class RDTSocket(StreamSocket):
         flags = 0 | 1 << 1 | 0 << 2
         self.seq_num = 0  # Initial sequence number
         print(f"connect: seq_num - {self.seq_num}")
-        self.last_recieved_num = None  # Initialize last received
         self.lock.release()
         data_len = 0
 
@@ -142,7 +141,7 @@ class RDTSocket(StreamSocket):
             #wait for SYNACK
             try:
                 self.output(syn_seg, addr[0])
-                segment = self.seg_q.get(timeout=1)
+                segment = self.seg_q.get(timeout=.1)
             except queue.Empty: 
                 segment = None
                 continue
@@ -155,6 +154,7 @@ class RDTSocket(StreamSocket):
                 segment = None
                 ##print("connect: incorrect response")
             else:
+                x = 1
                 print("connect: SYNACK recieved!")
             
 
@@ -164,8 +164,9 @@ class RDTSocket(StreamSocket):
 
         self.lock.acquire()
         self.seq_num ^= 1
+        self.last_recieved_num = 1 #need to set this for two way conn
         self.lock.release()
-        print(f"connect: seq_num - {self.seq_num}")
+        print(f"({self.port}connect: seq_num - {self.seq_num}")
 
         precheck = struct.pack(PRECHK_HDR_FRMT, self.port, self.remote_addr[1], self.seq_num, seq_num ^ 1, flags, data_len)
         checksum = get_checksum(precheck)
@@ -182,7 +183,7 @@ class RDTSocket(StreamSocket):
         #send ACK, if dropped -> server resends SYNACK -> client resends ACK
         self.output(ack_seg, addr[0])
         self.seq_num ^= 1
-        print('client: conn established')
+        print(f'{self.port}client: conn established')
         return
 
 
@@ -213,7 +214,7 @@ class RDTSocket(StreamSocket):
             try:
                 print(f"({self.port}) sending data")
                 self.output(hdr+data, self.remote_addr[0])
-                ack_seg = self.seg_q.get(timeout=1)
+                ack_seg = self.seg_q.get(timeout=0.1)
             except queue.Empty:
                 print(f"({self.port}) send: nothing in q - ACK or data must've dropped")
                 ack_seg = None
@@ -274,14 +275,14 @@ class RDTSocket(StreamSocket):
         self.output(synack_seg, rhost)
 
         def synack_resender():
-            while not self.ack_event.wait(timeout=1):  # Wait up to 5 seconds for ACK
+            while not self.ack_event.wait(timeout=.1):  # Wait up to 5 seconds for ACK
                 # If event wasn't set (timeout occurred), resend
                 self.output(synack_seg, rhost)
 
         # start as daemon so it won't block process exit
         t = threading.Thread(target=synack_resender, daemon=True)
         t.start()
-        print("server: conn established")
+        print(f"({self.port})server: conn established")
         # return immediately (do NOT wait here)
         return
         
