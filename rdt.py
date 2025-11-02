@@ -181,6 +181,7 @@ class RDTSocket(StreamSocket):
 
         #send ACK, if dropped -> server resends SYNACK -> client resends ACK
         self.output(ack_seg, addr[0])
+        self.seq_num ^= 1
         print('client: conn established')
         return
 
@@ -389,9 +390,9 @@ class RDTProtocol(Protocol):
                 # Resend the ACK
                 flags = 1  # ACK flag
                 data_len = 0
-                precheck = struct.pack(PRECHK_HDR_FRMT, dport, rport, dest_sock.seq_num, seq_num ^ 1, flags, data_len)
+                precheck = struct.pack(PRECHK_HDR_FRMT, dport, rport, dest_sock.seq_num ^ 1, seq_num ^ 1, flags, data_len)
                 checksum = get_checksum(precheck)
-                ack_seg = struct.pack(HDR_FRMT, dport, rport, dest_sock.seq_num, seq_num ^ 1, flags, data_len, checksum[0])
+                ack_seg = struct.pack(HDR_FRMT, dport, rport, dest_sock.seq_num ^ 1, seq_num ^ 1, flags, data_len, checksum[0])
                 dest_sock.output(ack_seg, rhost)
             return
 
@@ -410,6 +411,7 @@ class RDTProtocol(Protocol):
             # Put on connection queue first
             dest_sock.parent.conn_q.put((dest_sock, rhost, rport))
             dest_sock.last_recieved_num = seq_num
+            print(f"proto input: last recieved dest sock - {dest_sock.last_recieved_num}")
             
             # Set the event last - this unblocks the handle_syn thread
             dest_sock.parent.ack_event.set()
